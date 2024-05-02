@@ -7,7 +7,9 @@ target 'Netflix' do
   
   pod 'Firebase/Core'
   pod 'Firebase/Database'
-
+  pod 'FirebaseAuth'
+  pod 'FirebaseFirestore'
+  pod 'FirebaseAnalytics'
   # Pods for Netflix
 
   target 'NetflixTests' do

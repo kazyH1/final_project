@@ -13,6 +13,7 @@ class HeaderView: UIView {
     
     private let playButton = UIButton()
     private let downloadButton = UIButton()
+    private let addMyListButton = UIButton()
     
     func designButton(button: UIButton, title: String){
         button.setTitle(title, for: .normal)
