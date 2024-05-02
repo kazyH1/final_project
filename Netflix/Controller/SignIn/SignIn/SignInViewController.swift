@@ -12,8 +12,10 @@ import UIKit
 class SignInViewController: UIViewController {
     
     @IBAction func passwordSecureButton(_ sender: UIButton) {
-        if passwordTextField.isSecureTextEntry{
-            
+        if !passwordTextField.isSecureTextEntry{
+            sender.setTitle("SHOW", for: .normal)
+        } else {
+            sender.setTitle("HIDE", for: .normal)
         }
         passwordTextField.isSecureTextEntry.toggle()
     }
@@ -24,12 +26,35 @@ class SignInViewController: UIViewController {
         didTabButton(sender)
     }
     
+    @IBOutlet weak var passLabel: UILabel!
+    @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavbar()
+        designPlaceholder(emailTextField, playholderText: "Email or phone number")
+        designPlaceholder(passwordTextField, playholderText: "Password")
+       
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        setupPlaceholder(emailTextField, lbl: emailLabel)
+        setupPlaceholder(passwordTextField, lbl: passLabel)
+    }
+    
+    func setupPlaceholder(_ tf: UITextField, lbl: UILabel) {
+        if !tf.hasText {
+            lbl.isHidden = true
+        } else {
+            lbl.isHidden = false
+        }
+    }
+    
+    func designPlaceholder(_ tf: UITextField, playholderText: String) {
+        tf.attributedPlaceholder = NSAttributedString(string: playholderText, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray3])
     }
     
     @objc func didTabButton(_ button:UIButton){
