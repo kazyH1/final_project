@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleAspectFit" id="iN0-l3-epB" customClass="OnboardingSlideView" customModule="Netflix" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="67v-mV-NGG">
+                    <rect key="frame" x="157" y="357" width="79.333333333333314" height="38.333333333333314"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="32"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="heightClass=regular-widthClass=regular">
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="44"/>
+                    </variation>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qzG-oi-Ha5">
+                    <rect key="frame" x="174.66666666666666" y="435.33333333333331" width="43.666666666666657" height="21.666666666666686"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="heightClass=regular-widthClass=regular">
+                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                    </variation>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="qzG-oi-Ha5" firstAttribute="top" secondItem="67v-mV-NGG" secondAttribute="bottom" constant="40" id="ACU-0n-Fcn"/>
+                <constraint firstItem="67v-mV-NGG" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-50" id="Ovd-R7-kW6"/>
+                <constraint firstItem="qzG-oi-Ha5" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="gLN-7b-KRy"/>
+                <constraint firstItem="67v-mV-NGG" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="oWQ-oZ-mBH"/>
+            </constraints>
+            <connections>
+                <outlet property="onboardingContents" destination="qzG-oi-Ha5" id="fpS-P7-905"/>
+                <outlet property="onboardingTitle" destination="67v-mV-NGG" id="UUv-e9-AhF"/>
+            </connections>
+            <point key="canvasLocation" x="11" y="-11"/>
+        </view>
+    </objects>
+</document>
