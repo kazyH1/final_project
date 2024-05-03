@@ -13,6 +13,7 @@ class TabBarViewController: UITabBarController {
         super.viewDidLoad()
         creatTab()
         setLayout()
+        hideBackButton()
     }
     
     private func setLayout() {
@@ -33,5 +34,8 @@ class TabBarViewController: UITabBarController {
         navigationController.tabBarItem.image = UIImage(named: tabBarImage)
         return navigationController
     }
-    
+    private func hideBackButton() {
+        navigationController?.navigationBar.isHidden = true
+    }
 }
+

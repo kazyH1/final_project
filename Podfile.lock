@@ -952,6 +952,8 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.32):
     - BoringSSL-GRPC/Interface (= 0.0.32)
   - BoringSSL-GRPC/Interface (0.0.32)
+  - Firebase/Analytics (10.25.0):
+    - Firebase/Core
   - Firebase/Core (10.25.0):
     - Firebase/CoreOnly
     - FirebaseAnalytics (~> 10.25.0)
@@ -1163,9 +1165,9 @@ PODS:
   - RecaptchaInterop (100.0.0)
 
 DEPENDENCIES:
+  - Firebase/Analytics
   - Firebase/Core
   - Firebase/Database
-  - FirebaseAnalytics
   - FirebaseAuth
   - FirebaseFirestore
 
@@ -1220,6 +1222,6 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
 
-PODFILE CHECKSUM: 279259e721b76ec19c8860c73fba37bc30692833
+PODFILE CHECKSUM: 9c43253f2070c3aa9cd825652ffacc1daac3f1b3
 
 COCOAPODS: 1.15.2

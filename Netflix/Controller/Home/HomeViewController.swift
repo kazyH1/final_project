@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class HomeViewController: UIViewController {
     
@@ -119,7 +120,7 @@ extension HomeViewController {
         image = image?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: nil),
+            UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: #selector(handleLogout)),
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil)
         ]
         navigationController?.navigationBar.tintColor = .white
@@ -128,6 +129,20 @@ extension HomeViewController {
     @objc func showDetail(_ button:UIButton){
         let listVC = ListMovieViewController()
         self.navigationController?.pushViewController(listVC, animated: true)
+    }
+    
+    @objc func handleLogout() {
+        do {
+            try Auth.auth().signOut()
+            let signInViewModel = SignInViewModel.shared
+            signInViewModel.clearUserLoggedInState()
+            let displayVC = DisplayViewController()
+            let navigationController = UINavigationController(rootViewController: displayVC)
+            navigationController.modalPresentationStyle = .fullScreen
+            present(navigationController, animated: true, completion: nil)
+        } catch {
+            print("Đăng xuất không thành công: \(error.localizedDescription)")
+        }
     }
 }
 

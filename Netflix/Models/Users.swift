@@ -6,8 +6,7 @@
 //
 
 import Foundation
-struct Users {
-    let username: String
+struct User {
     let email: String
-    let userUID: String
+    let uid: String
 }

@@ -22,23 +22,30 @@ class DisplayViewController: UIViewController {
     @IBOutlet weak var onboardingScrollView: UIScrollView!
     @IBOutlet weak var onboardingPageControl: UIPageControl!
     
-    var pages : [OnboardingSlideView] {
-        get {
-            let page1: OnboardingSlideView = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as! OnboardingSlideView
-            page1.onboardingTitle.text = onboardingTitle[0]
-            page1.onboardingContents.text = onboadingContent[0]
-            let page2: OnboardingSlideView = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as! OnboardingSlideView
-            page2.onboardingTitle.text = onboardingTitle[1]
-            page2.onboardingContents.text = onboadingContent[1]
-            let page3: OnboardingSlideView = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as! OnboardingSlideView
-            page3.onboardingTitle.text = onboardingTitle[2]
-            page3.onboardingContents.text = onboadingContent[2]
-            let page4: OnboardingSlideView = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as! OnboardingSlideView
-            page4.onboardingTitle.text = onboardingTitle[3]
-            page4.onboardingContents.text = onboadingContent[3]
-            return [page1, page2, page3, page4]
-        }
-    }
+    lazy var pages: [OnboardingSlideView] = {
+            var views = [OnboardingSlideView]()
+            if let page1 = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as? OnboardingSlideView {
+                page1.onboardingTitle.text = onboardingTitle[0]
+                page1.onboardingContents.text = onboadingContent[0]
+                views.append(page1)
+            }
+            if let page2 = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as? OnboardingSlideView {
+                page2.onboardingTitle.text = onboardingTitle[1]
+                page2.onboardingContents.text = onboadingContent[1]
+                views.append(page2)
+            }
+            if let page3 = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as? OnboardingSlideView {
+                page3.onboardingTitle.text = onboardingTitle[2]
+                page3.onboardingContents.text = onboadingContent[2]
+                views.append(page3)
+            }
+            if let page4 = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as? OnboardingSlideView {
+                page4.onboardingTitle.text = onboardingTitle[3]
+                page4.onboardingContents.text = onboadingContent[3]
+                views.append(page4)
+            }
+            return views
+        }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
