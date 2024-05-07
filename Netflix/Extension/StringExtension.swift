@@ -15,8 +15,11 @@ extension String {
     }
     
     public func isValidPassword(_ pass: String) -> Bool {
-        let passwordRegex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*()\\-_=+{}|?>.<,:;~`’]{8,}$"
+        let passwordRegex = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*()\\-_=+{}|?>.<,:;~`’/{};.%$*,]{8,}$"
         let passText = NSPredicate(format:"SELF MATCHES %@", passwordRegex)
         return passText.evaluate(with: pass)
+    }
+    public func capitalizeFirstLetter() -> String {
+            return self.prefix(1).uppercased() + self.lowercased().dropFirst()
     }
 }

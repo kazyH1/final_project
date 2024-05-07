@@ -9,6 +9,8 @@ import UIKit
 
 class HomeTableViewCell: UITableViewCell {
     
+    private var movies: [Movie] = [Movie]()
+    
     @IBOutlet weak var moviesCollectionView: UICollectionView!
     
     override func awakeFromNib() {
@@ -30,16 +32,26 @@ class HomeTableViewCell: UITableViewCell {
 extension  HomeTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     internal func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 140, height: 400)
+        return CGSize(width: 140, height: 200)
     }
     
     internal func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return movies.count
     }
     
     internal func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = moviesCollectionView.dequeueReusableCell(withReuseIdentifier: "MovieCollectionViewCell", for: indexPath) as? MovieCollectionViewCell else { return .init()}
-        cell.backgroundColor = .brown
+        guard let model = movies[indexPath.row].poster_path else {
+            return UICollectionViewCell()
+        }
+        cell.configure(with: model)
         return cell
+    }
+    
+    public func configure(with movies: [Movie]) {
+        self.movies = movies
+        DispatchQueue.main.async { [weak self] in
+            self?.moviesCollectionView.reloadData()
+        }
     }
 }

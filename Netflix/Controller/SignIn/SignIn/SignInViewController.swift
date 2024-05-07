@@ -74,10 +74,16 @@ class SignInViewController: UIViewController {
         let yourBackImage = UIImage(systemName: "arrow.backward")
         var image = UIImage(named: "netflixLogo")
         image = image?.withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItems = [UIBarButtonItem(image: yourBackImage, style: .done, target: self, action: nil)
+        navigationItem.leftBarButtonItems = [UIBarButtonItem(image: yourBackImage, style: .done, target: self, action: #selector(backPreviousScreen))
                                              ,UIBarButtonItem(image: image, style: .done, target: self, action: nil)]
         navigationController?.navigationBar.backgroundColor = .black
         navigationController?.navigationBar.tintColor = .white
+    }
+    
+    @objc func backPreviousScreen(){
+        self.navigationController?.popViewController(animated: true)
+//        let displayVC = DisplayViewController()
+//        self.navigationController?.pushViewController(displayVC, animated: true)
     }
     
     func showAlert(title: String, message: String) {
@@ -119,7 +125,7 @@ class SignInViewController: UIViewController {
         case .userNotFound:
             showAlert(title: "Login fail", message: "User not found.")
         case .unknownError:
-            showAlert(title: "Login fail", message: "Unknown error.")
+            showAlert(title: "Login fail", message: "Email or password is invalid!.")
         }
     }
 }

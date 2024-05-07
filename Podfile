@@ -10,6 +10,8 @@ target 'Netflix' do
   pod 'Firebase/Analytics'
   pod 'FirebaseAuth'
   pod 'FirebaseFirestore'
+  pod 'SDWebImage', '~> 5.0'
+  pod 'SDWebImage/MapKit'
   # Pods for Netflix
 
   target 'NetflixTests' do

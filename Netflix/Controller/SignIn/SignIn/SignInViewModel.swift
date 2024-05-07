@@ -27,15 +27,14 @@ class SignInViewModel {
             let user = User(email: userCredential.user.email ?? "", uid: userCredential.user.uid)
                 saveUserLoggedInState()
         } catch let error as NSError {
-            switch error._code {
+            print(error)
+            switch error.code {
             case AuthErrorCode.wrongPassword.rawValue:
                 throw AuthError.wrongPassword
             case AuthErrorCode.userNotFound.rawValue:
                 throw AuthError.userNotFound
             default:
                 throw AuthError.unknownError
-                print("Firebase error code: \(error.code)")
-                print("Firebase error message: \(error.localizedDescription)")
             }
         }
     }

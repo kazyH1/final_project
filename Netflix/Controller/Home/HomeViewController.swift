@@ -10,6 +10,16 @@ import FirebaseAuth
 
 class HomeViewController: UIViewController {
     
+    enum Sections: Int {
+        case TrendingMovies = 0
+        case TrendingTv = 1
+        case Popular = 2
+        case Upcoming = 3
+        case TopRated = 4
+    }
+    
+    private var headerView: HeaderView?
+    private var randomTrendingMovie: Movie?
     let sectionTitles: [String] = ["Trending Movies", "Trending Tv", "Popular", "Upcoming Movies", "Top rated"]
     
     @IBOutlet weak var homeFeedTableView: UITableView!
@@ -18,13 +28,11 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         registerTableView()
         configureNavbar()
-        
+        configureHeaderView()
         let heightOfHeaderView = view.bounds.height * 3 / 5
         let widthOfHeaderView = view.bounds.width
-        
         let horizontalSizeClass = self.traitCollection.horizontalSizeClass
         let verticalSizeClass = self.traitCollection.verticalSizeClass
-        
         if horizontalSizeClass == .regular && verticalSizeClass == .regular {
             let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: widthOfHeaderView, height: heightOfHeaderView + 400))
             homeFeedTableView.tableHeaderView =  headerView
@@ -96,6 +104,56 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = homeFeedTableView.dequeueReusableCell(withIdentifier: "HomeTableViewCell", for: indexPath) as? HomeTableViewCell else { return .init() }
         cell.registerCollecTionView()
+        
+        switch indexPath.section {
+        case Sections.TrendingMovies.rawValue:
+            HomeViewModel.shared.getTrendingMovies { result in
+                switch result {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.TrendingTv.rawValue:
+            HomeViewModel.shared.getTrendingTvs { result in
+                switch result {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.Popular.rawValue:
+            HomeViewModel.shared.getPopular { result in
+                switch result {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.Upcoming.rawValue:
+            HomeViewModel.shared.getUpcomingMovies { result in
+                switch result {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
+        case Sections.TopRated.rawValue:
+            HomeViewModel.shared.getTopRated { result in
+                switch result {
+                case .success(let movies):
+                    cell.configure(with: movies)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        default:
+            return UITableViewCell()
+        }
         return cell
     }
     
@@ -115,14 +173,33 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension HomeViewController {
+    private func configureHeaderView() {
+        HomeViewModel.shared.getTrendingMovies { [weak self] result in
+            switch result {
+            case .success(let movies):
+                guard !movies.isEmpty else {
+                    print("No trending movies available")
+                    return
+                }
+                let randomIndex = Int.random(in: 0..<movies.count)
+                let randomMovie = movies[randomIndex]
+                guard let posterPath = randomMovie.poster_path else {
+                    print("No poster available for the randomly selected movie")
+                    return
+                }
+                    self?.headerView?.configure(with: posterPath)
+            case .failure(let error):
+                print("Failed to get trending movies: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    
     private func configureNavbar() {
         var image = UIImage(named: "netflixLogo")
         image = image?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: #selector(handleLogout)),
-            UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil)
-        ]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "userIcon"), style: .done, target: self, action: #selector(handleLogout))
         navigationController?.navigationBar.tintColor = .white
     }
     
@@ -146,10 +223,6 @@ extension HomeViewController {
     }
 }
 
-extension String {
-    func capitalizeFirstLetter() -> String {
-        return self.prefix(1).uppercased() + self.lowercased().dropFirst()
-    }
-}
+
 
 
