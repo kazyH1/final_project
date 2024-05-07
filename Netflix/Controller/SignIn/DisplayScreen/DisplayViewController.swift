@@ -8,44 +8,24 @@
 import UIKit
 
 class DisplayViewController: UIViewController {
-    @IBAction func getStartedButton(_ sender: UIButton) {
-        didTabButton(sender)
-    }
     
-    var onboardingTitle = ["Unlimited movies, TV shows, and more.", "There's a plan for every fan", "Cacel online anytime", "How do I watch?"]
-    var onboadingContent = ["""
-                            Watch anywhere. Cancel anytime.
-                            Let's click Get Started to sign in
-                            """,
-"Small prince. Big entertaiment.", "Join today, no reason to wait.", "Members that subcribe to Netflix can watch here in the app"]
+    private var viewModel = DisplayViewModel()
+      private var onboardingSlideViewModels: [OnboardingSlideViewModel] {
+          return viewModel.onboardingSlides
+      }
+      
+      lazy var pages: [OnboardingSlideView] = {
+          var views = [OnboardingSlideView]()
+          for slideViewModel in onboardingSlideViewModels {
+              let slideView = OnboardingSlideView()
+              slideView.configure(with: slideViewModel)
+              views.append(slideView)
+          }
+          return views
+      }()
     
     @IBOutlet weak var onboardingScrollView: UIScrollView!
     @IBOutlet weak var onboardingPageControl: UIPageControl!
-    
-    lazy var pages: [OnboardingSlideView] = {
-            var views = [OnboardingSlideView]()
-            if let page1 = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as? OnboardingSlideView {
-                page1.onboardingTitle.text = onboardingTitle[0]
-                page1.onboardingContents.text = onboadingContent[0]
-                views.append(page1)
-            }
-            if let page2 = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as? OnboardingSlideView {
-                page2.onboardingTitle.text = onboardingTitle[1]
-                page2.onboardingContents.text = onboadingContent[1]
-                views.append(page2)
-            }
-            if let page3 = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as? OnboardingSlideView {
-                page3.onboardingTitle.text = onboardingTitle[2]
-                page3.onboardingContents.text = onboadingContent[2]
-                views.append(page3)
-            }
-            if let page4 = Bundle.main.loadNibNamed("OnboardingSlideView", owner: self, options: nil)?.first as? OnboardingSlideView {
-                page4.onboardingTitle.text = onboardingTitle[3]
-                page4.onboardingContents.text = onboadingContent[3]
-                views.append(page4)
-            }
-            return views
-        }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,6 +34,19 @@ class DisplayViewController: UIViewController {
         onboardingPageControl.numberOfPages = pages.count
         onboardingPageControl.currentPage = 0
         onboardingPageControl.isUserInteractionEnabled = false
+        print("onboardingSlides:", viewModel.onboardingSlides)
+    }
+    
+    @IBAction func getStartedButton(_ sender: UIButton) {
+        didTabButton(sender)
+    }
+}
+    
+extension DisplayViewController {
+    
+    @objc func didTabButton(_ button:UIButton){
+        let signInVC = SignInViewController()
+        self.navigationController?.pushViewController(signInVC, animated: true)
     }
     
     private func configureNavbar() {
@@ -65,18 +58,22 @@ class DisplayViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .white
     }
     
-    @objc func didTabButton(_ button:UIButton){
-        let signInVC = SignInViewController()
-        self.navigationController?.pushViewController(signInVC, animated: true)
-    }
-    
     private func setupOnboardingScrollView() {
         onboardingScrollView.delegate = self
         onboardingScrollView.showsVerticalScrollIndicator = false
+        
+        // Xóa các subviews cũ trước khi thêm mới
+        for subview in onboardingScrollView.subviews {
+            subview.removeFromSuperview()
+        }
+        
+        // Thêm các OnboardingSlideView vào onboardingScrollView
         for (index, page) in pages.enumerated() {
             page.frame = CGRect(x: view.frame.width * CGFloat(index), y: 0, width: view.frame.width, height: onboardingScrollView.frame.height)
             onboardingScrollView.addSubview(page)
         }
+        
+        // Cập nhật lại contentSize của onboardingScrollView
         onboardingScrollView.contentSize = CGSize(width: view.frame.width * CGFloat(pages.count), height: onboardingScrollView.frame.height)
     }
 }
