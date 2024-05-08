@@ -14,8 +14,8 @@
                 <outlet property="emailTextField" destination="GGs-Uf-IGE" id="ewn-lG-ImV"/>
                 <outlet property="passLabel" destination="IGZ-y0-TQE" id="waE-fR-XbS"/>
                 <outlet property="passwordTextField" destination="2iD-9d-MMW" id="unu-Ui-raW"/>
-                <outlet property="signInButton" destination="ffk-Ay-sel" id="lzh-kt-2rF"/>
-                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="signInButton" destination="ffk-Ay-sel" id="FwJ-HS-Mis"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="aA5-Rz-Vsn"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -110,7 +110,7 @@
                                 <color key="baseBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </buttonConfiguration>
                             <connections>
-                                <action selector="signInButton:" destination="-1" eventType="touchUpInside" id="VBP-mF-RfB"/>
+                                <action selector="signInButtonTapped:" destination="-1" eventType="touchUpInside" id="Vva-DO-J6T"/>
                             </connections>
                         </button>
                     </subviews>

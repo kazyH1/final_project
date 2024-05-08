@@ -13,6 +13,7 @@ target 'Netflix' do
   pod 'SDWebImage', '~> 5.0'
   pod 'SDWebImage/MapKit'
   # Pods for Netflix
+  pod 'Tabman', '~> 3.2'
 
   target 'NetflixTests' do
     inherit! :search_paths

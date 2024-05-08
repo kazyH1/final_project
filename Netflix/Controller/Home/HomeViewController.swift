@@ -10,87 +10,138 @@ import FirebaseAuth
 
 class HomeViewController: UIViewController {
     
-    enum Sections: Int {
-        case TrendingMovies = 0
-        case TrendingTv = 1
-        case Popular = 2
-        case Upcoming = 3
-        case TopRated = 4
-    }
+    @IBOutlet private weak var homeFeedTableView: UITableView!
     
+    // MARK: - Properties
+    private var viewModel: HomeViewModel?
     private var headerView: HeaderView?
     private var randomTrendingMovie: Movie?
-    let sectionTitles: [String] = ["Trending Movies", "Trending Tv", "Popular", "Upcoming Movies", "Top rated"]
+    private let sectionTitles: [String] = ["Trending Movies", "Trending Tv", "Popular", "Upcoming Movies", "Top rated"]
     
-    @IBOutlet weak var homeFeedTableView: UITableView!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        registerTableView()
-        configureNavbar()
-        configureHeaderView()
-        let heightOfHeaderView = view.bounds.height * 3 / 5
-        let widthOfHeaderView = view.bounds.width
-        let horizontalSizeClass = self.traitCollection.horizontalSizeClass
-        let verticalSizeClass = self.traitCollection.verticalSizeClass
-        if horizontalSizeClass == .regular && verticalSizeClass == .regular {
-            let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: widthOfHeaderView, height: heightOfHeaderView + 400))
-            homeFeedTableView.tableHeaderView =  headerView
-        } else {
-            let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: widthOfHeaderView, height: heightOfHeaderView))
-            homeFeedTableView.tableHeaderView =  headerView
-        }
+    // MARK: - Initializers
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = HomeViewModel()
     }
     
-    private func registerTableView() {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - View Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupTableView()
+        configureNavbar()
+        
+        // Configure header view
+        configureHeaderView()
+        setupHeaderView()
+    }
+    
+}
+
+// MARK: - setupUI
+extension HomeViewController {
+    
+    private func setupTableView() {
         homeFeedTableView.delegate = self
         homeFeedTableView.dataSource = self
         homeFeedTableView.register(UINib(nibName: "HomeTableViewCell", bundle: nil), forCellReuseIdentifier: "HomeTableViewCell")
+        homeFeedTableView.register(UINib(nibName: "HeaderInSectionView", bundle: nil), forHeaderFooterViewReuseIdentifier: "HeaderInSectionView")
+    }
+    
+    private func setupHeaderView() {
+        let heightOfHeaderView = view.bounds.height * 3 / 5
+        let widthOfHeaderView = view.bounds.width
+        let headerHeight = traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .regular ? heightOfHeaderView + 400 : heightOfHeaderView
+        let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: widthOfHeaderView, height: headerHeight))
+        homeFeedTableView.tableHeaderView = headerView
+        self.headerView = headerView
+    }
+    
+    private func configureNavbar() {
+        var image = UIImage(named: "netflixLogo")
+        image = image?.withRenderingMode(.alwaysOriginal)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "userIcon"), style: .done, target: self, action: #selector(handleLogout))
+        navigationController?.navigationBar.tintColor = .white
     }
 }
 
+//MARK: Configuration Methods
+extension HomeViewController {
+    
+    private func configureCell(for cell: HomeTableViewCell, at section: Int) {
+        let category: String
+        switch section {
+        case Category.TrendingMovies.rawValue:
+            category = "trending/movie/day"
+        case Category.TrendingTv.rawValue:
+            category = "trending/tv/day"
+        case Category.Popular.rawValue:
+            category = "movie/popular"
+        case Category.Upcoming.rawValue:
+            category = "movie/upcoming"
+        case Category.TopRated.rawValue:
+            category = "movie/top_rated"
+        default:
+            return
+        }
+        
+        viewModel?.getMovies(for: category) { result in
+            self.handleResult(result, for: cell)
+        }
+    }
+    
+    private func configureHeaderView() {
+        viewModel?.fetchTrendingMoviePosterPath { [weak self] result in
+            switch result {
+            case .success(let posterPath):
+                self?.headerView?.configure(with: posterPath)
+            case .failure(let error):
+                print("Failed to configure header view: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func handleResult(_ result: Result<[Movie], Error>, for cell: HomeTableViewCell) {
+        switch result {
+        case .success(let movies):
+            cell.configure(with: movies)
+        case .failure(let error):
+            print("Failed to fetch movies: \(error.localizedDescription)")
+        }
+    }
+}
+
+//MARK: - Helper Methods
+extension HomeViewController {
+    @objc func showDetail(_ button:UIButton){
+        let listVC = ListMovieViewController()
+        self.navigationController?.pushViewController(listVC, animated: true)
+    }
+    
+    @objc func handleLogout() {
+        viewModel?.logOut()
+        let displayVC = DisplayViewController()
+        let navigationController = UINavigationController(rootViewController: displayVC)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true, completion: nil)
+    }
+}
+
+//MARK: TableView
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView()
-        view.backgroundColor = UIColor.black
-        
-        // Setup Title Label
-        let title = UILabel()
-        title.text = sectionTitles[section]
-        title.textColor = UIColor.white
-        title.text = title.text?.capitalizeFirstLetter()
-        title.font = .systemFont(ofSize: 18, weight: .semibold)
-        title.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Setup Button
-        let seeAllButton = UIButton(type: .system)
-        seeAllButton.setTitle("See All", for: .normal)
-        seeAllButton.setTitleColor(UIColor.gray, for: .normal)
-        seeAllButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        seeAllButton.addTarget(self, action: #selector(showDetail(_:)), for: .touchUpInside)
-        seeAllButton.tag = section
-        seeAllButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Add Subviews
-        view.addSubview(title)
-        view.addSubview(seeAllButton)
-        
-        // Setup Constraints
-        NSLayoutConstraint.activate([
-            // Title Label Constraints
-            title.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            title.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            title.widthAnchor.constraint(equalToConstant: 200),
-            title.heightAnchor.constraint(equalToConstant: 30),
-            
-            // See All Button Constraints
-            seeAllButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            seeAllButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            seeAllButton.widthAnchor.constraint(equalToConstant: 62),
-            seeAllButton.heightAnchor.constraint(equalToConstant: 12)
-        ])
-        return view
+        guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderInSectionView") as? HeaderInSectionView else {return .init()}
+        headerView.sectionTitle.text = sectionTitles[section]
+        headerView.sectionTitle.text = headerView.sectionTitle.text?.capitalizeFirstLetter()
+        headerView.seeAllButton.addTarget(self, action: #selector(showDetail(_:)), for: .touchUpInside)
+        headerView.seeAllButton.tag = section
+        return headerView
     }
     
     internal func numberOfSections(in tableView: UITableView) -> Int {
@@ -104,56 +155,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = homeFeedTableView.dequeueReusableCell(withIdentifier: "HomeTableViewCell", for: indexPath) as? HomeTableViewCell else { return .init() }
         cell.registerCollecTionView()
-        
-        switch indexPath.section {
-        case Sections.TrendingMovies.rawValue:
-            HomeViewModel.shared.getTrendingMovies { result in
-                switch result {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        case Sections.TrendingTv.rawValue:
-            HomeViewModel.shared.getTrendingTvs { result in
-                switch result {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        case Sections.Popular.rawValue:
-            HomeViewModel.shared.getPopular { result in
-                switch result {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        case Sections.Upcoming.rawValue:
-            HomeViewModel.shared.getUpcomingMovies { result in
-                switch result {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
-        case Sections.TopRated.rawValue:
-            HomeViewModel.shared.getTopRated { result in
-                switch result {
-                case .success(let movies):
-                    cell.configure(with: movies)
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        default:
-            return UITableViewCell()
-        }
+        configureCell(for: cell, at: indexPath.section)
         return cell
     }
     
@@ -171,58 +173,5 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
     }
 }
-
-extension HomeViewController {
-    private func configureHeaderView() {
-        HomeViewModel.shared.getTrendingMovies { [weak self] result in
-            switch result {
-            case .success(let movies):
-                guard !movies.isEmpty else {
-                    print("No trending movies available")
-                    return
-                }
-                let randomIndex = Int.random(in: 0..<movies.count)
-                let randomMovie = movies[randomIndex]
-                guard let posterPath = randomMovie.poster_path else {
-                    print("No poster available for the randomly selected movie")
-                    return
-                }
-                    self?.headerView?.configure(with: posterPath)
-            case .failure(let error):
-                print("Failed to get trending movies: \(error.localizedDescription)")
-            }
-        }
-    }
-
-    
-    private func configureNavbar() {
-        var image = UIImage(named: "netflixLogo")
-        image = image?.withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "userIcon"), style: .done, target: self, action: #selector(handleLogout))
-        navigationController?.navigationBar.tintColor = .white
-    }
-    
-    @objc func showDetail(_ button:UIButton){
-        let listVC = ListMovieViewController()
-        self.navigationController?.pushViewController(listVC, animated: true)
-    }
-    
-    @objc func handleLogout() {
-        do {
-            try Auth.auth().signOut()
-            let signInViewModel = SignInViewModel.shared
-            signInViewModel.clearUserLoggedInState()
-            let displayVC = DisplayViewController()
-            let navigationController = UINavigationController(rootViewController: displayVC)
-            navigationController.modalPresentationStyle = .fullScreen
-            present(navigationController, animated: true, completion: nil)
-        } catch {
-            print("Đăng xuất không thành công: \(error.localizedDescription)")
-        }
-    }
-}
-
-
 
 

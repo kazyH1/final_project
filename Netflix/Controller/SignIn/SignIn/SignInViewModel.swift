@@ -1,63 +1,45 @@
-//
-//  SignInViewModel.swift
-//  Netflix
-//
-//  Created by Admin on 02/05/2024.
-//
-
 import Foundation
-import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 
+protocol SignInViewModelDelegate: AnyObject {
+    func signInSuccess()
+    func signInFailure(with error: String)
+}
+
 class SignInViewModel {
     
-    enum AuthError: Error {
-        case wrongPassword
-        case userNotFound
-        case unknownError
-    }
-    
-    static let shared = SignInViewModel()
+    weak var delegate: SignInViewModelDelegate?
     private let database = Database.database().reference()
     
-    func signIn(email: String, pass: String) async throws {
-        do {
-            let userCredential = try await Auth.auth().signIn(withEmail: email, password: pass)
-            let user = User(email: userCredential.user.email ?? "", uid: userCredential.user.uid)
-                saveUserLoggedInState()
-        } catch let error as NSError {
-            print(error)
-            switch error.code {
-            case AuthErrorCode.wrongPassword.rawValue:
-                throw AuthError.wrongPassword
-            case AuthErrorCode.userNotFound.rawValue:
-                throw AuthError.userNotFound
+    func signIn(email: String, pass: String) {
+        Auth.auth().signIn(withEmail: email, password: pass) { [weak self] result, error in
+            guard let self = self else { return }
+            if let error = error as NSError? {
+                let errorCode = AuthErrorCode.Code(rawValue: error._code)
+                self.handleSignInFailure(errorCode: errorCode?.rawValue)
+            } else if let user = result?.user {
+                let user = User(email: user.email ?? "", uid: user.uid)
+                self.saveUserLoggedInState(for: user)
+                self.delegate?.signInSuccess()
+            }
+        }
+    }
+    
+    private func saveUserLoggedInState(for user: User) {
+        database.child("users").child(user.uid).child("loggedIn").setValue(true)
+    }    
+    
+    private func handleSignInFailure(errorCode: Int?) {
+        if let errorCode = errorCode, let authErrorCode = AuthErrorCode.Code(rawValue: errorCode) {
+            switch authErrorCode {
+            case .wrongPassword:
+                delegate?.signInFailure(with: "Wrong password.")
+            case .userNotFound:
+                delegate?.signInFailure(with: "User not found.")
             default:
-                throw AuthError.unknownError
+                delegate?.signInFailure(with: "Email or password is invalid!")
             }
-        }
-    }
-    
-    func saveUserLoggedInState() {
-        if let uid = Auth.auth().currentUser?.uid {
-            database.child("users").child("uid1").child("loggedIn").setValue(true)
-        }
-    }
-    
-    func clearUserLoggedInState() {
-        if let uid = Auth.auth().currentUser?.uid {
-            database.child("users").child("uid1").child("loggedIn").setValue(false)
-        }
-    }
-    
-    func isUserLoggedIn(completion: @escaping (Bool) -> Void) {
-        if let uid = Auth.auth().currentUser?.uid {
-            database.child("users").child("uid1").child("loggedIn").observeSingleEvent(of: .value) { snapshot in
-                completion(snapshot.exists())
-            }
-        } else {
-            completion(false)
         }
     }
 }

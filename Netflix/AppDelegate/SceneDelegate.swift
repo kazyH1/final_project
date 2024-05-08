@@ -16,18 +16,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
-        if let currentUser = Auth.auth().currentUser {
-            // Người dùng đã đăng nhập
-            let tabBarVC = TabBarViewController()
-            let tabBarNavi = UINavigationController(rootViewController: tabBarVC)
-            window?.windowScene = windowScene
-            window?.rootViewController = tabBarNavi
-        } else {
-            let displayVC = DisplayViewController()
-            let displayNavi = UINavigationController(rootViewController: displayVC)
-            window?.rootViewController = displayNavi
-            window?.windowScene = windowScene
-        }
+        
+                if let currentUser = Auth.auth().currentUser {
+                    let tabBarVC = TabBarViewController()
+                    let tabBarNavi = UINavigationController(rootViewController: tabBarVC)
+                    window?.windowScene = windowScene
+                    window?.rootViewController = tabBarNavi
+                } else {
+                    let displayVC = DisplayViewController()
+                    let displayNavi = UINavigationController(rootViewController: displayVC)
+                    window?.rootViewController = displayNavi
+                    window?.windowScene = windowScene
+                }
+//        let tabBarVC = MovieDetailViewController()
+//        let tabBarNavi = UINavigationController(rootViewController: tabBarVC)
+//        window?.windowScene = windowScene
+//        window?.rootViewController = tabBarNavi
         window?.makeKeyAndVisible()
     }
     

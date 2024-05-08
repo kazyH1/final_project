@@ -1161,6 +1161,7 @@ PODS:
     - nanopb/encode (= 2.30910.0)
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
+  - Pageboy (4.2.0)
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
   - SDWebImage (5.19.1):
@@ -1168,6 +1169,8 @@ PODS:
   - SDWebImage/Core (5.19.1)
   - SDWebImage/MapKit (5.19.1):
     - SDWebImage/Core
+  - Tabman (3.2.0):
+    - Pageboy (~> 4.2.0)
 
 DEPENDENCIES:
   - Firebase/Analytics
@@ -1177,6 +1180,7 @@ DEPENDENCIES:
   - FirebaseFirestore
   - SDWebImage (~> 5.0)
   - SDWebImage/MapKit
+  - Tabman (~> 3.2)
 
 SPEC REPOS:
   trunk:
@@ -1201,9 +1205,11 @@ SPEC REPOS:
     - GTMSessionFetcher
     - leveldb-library
     - nanopb
+    - Pageboy
     - PromisesObjC
     - RecaptchaInterop
     - SDWebImage
+    - Tabman
 
 SPEC CHECKSUMS:
   abseil: d121da9ef7e2ff4cab7666e76c5a3e0915ae08c3
@@ -1227,10 +1233,12 @@ SPEC CHECKSUMS:
   GTMSessionFetcher: 8000756fc1c19d2e5697b90311f7832d2e33f6cd
   leveldb-library: e8eadf9008a61f9e1dde3978c086d2b6d9b9dc28
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
+  Pageboy: 7f7886f61c76633df635861bf7839caf2cabdb3e
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   SDWebImage: 40b0b4053e36c660a764958bff99eed16610acbb
+  Tabman: 49f9181a2bfe5c29d002864dac2de8e0b7ea9180
 
-PODFILE CHECKSUM: 7207bf8de86a061d51866168fecdeb43846eec05
+PODFILE CHECKSUM: c5a11918f133851c06d4a9981beb55373458a998
 
 COCOAPODS: 1.15.2

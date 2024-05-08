@@ -19,7 +19,6 @@ class HomeTableViewCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        // Configure the view for the selected state
     }
     
     func registerCollecTionView() {
@@ -46,6 +45,12 @@ extension  HomeTableViewCell: UICollectionViewDelegate, UICollectionViewDataSour
         }
         cell.configure(with: model)
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("her")
+        let moviesDetailVC = MovieDetailViewController()
+        UINavigationController().pushViewController(moviesDetailVC, animated: true)
     }
     
     public func configure(with movies: [Movie]) {

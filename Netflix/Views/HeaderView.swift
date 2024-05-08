@@ -10,6 +10,8 @@ import UIKit
 class HeaderView: UIView {
     
     private let gradientLayer = CAGradientLayer()
+    private let infoButton = UIButton()
+    private let addMyListButton = UIButton()
     
     private let playButton: UIButton = {
         let button = UIButton()
@@ -20,10 +22,10 @@ class HeaderView: UIView {
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         button.layer.cornerRadius = 5
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(didTabButton), for: .editingDidBegin)
         return button
     }()
-    private let infoButton = UIButton()
-    private let addMyListButton = UIButton()
+   
     
     func designButton(button: UIButton, image: String){
         let image = UIImage(named: image)
@@ -37,7 +39,6 @@ class HeaderView: UIView {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
-        imageView.image = UIImage(named: "headerImage")
         return imageView
     }()
     
@@ -106,6 +107,10 @@ class HeaderView: UIView {
         NSLayoutConstraint.activate(addMyListButtonConstraints)
     }
     
+    @objc func didTabButton(){
+        let moviesDetailVC = MovieDetailViewController()
+        UINavigationController().pushViewController(moviesDetailVC, animated: true)
+    }
     
     public func configure(with poster: String) {
           guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(poster)") else {return}

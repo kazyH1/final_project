@@ -6,27 +6,9 @@
 //
 
 import UIKit
-//import FirebaseDatabase
 import FirebaseAuth
 
 class SignInViewController: UIViewController {
-    
-    let signInViewModel = SignInViewModel.shared
-    
-    @IBAction func passwordSecureButton(_ sender: UIButton) {
-        if !passwordTextField.isSecureTextEntry{
-            sender.setTitle("SHOW", for: .normal)
-        } else {
-            sender.setTitle("HIDE", for: .normal)
-        }
-        passwordTextField.isSecureTextEntry.toggle()
-    }
-    
-    @IBAction func signInButton(_ sender: UIButton) {
-        guard let email = emailTextField.text else { return }
-        guard let password = passwordTextField.text else { return }
-        signIn(email: email, password: password)
-    }
     
     @IBOutlet weak var signInButton: UIButton!
     @IBOutlet weak var passLabel: UILabel!
@@ -34,106 +16,101 @@ class SignInViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
     
+    // MARK: - Properties
+    private var viewModel: SignInViewModel?
+    
+    // MARK: - Initializers
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.viewModel = SignInViewModel()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureNavbar()
-        designPlaceholder(emailTextField, playholderText: "Email or phone number")
-        designPlaceholder(passwordTextField, playholderText: "Password")
-        emailTextField.autocorrectionType = .no
-        passwordTextField.autocorrectionType = .no
+        viewModel?.delegate = self
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        setupTextField()
-        setupInfoLabel(emailTextField, lbl: emailLabel)
-        setupInfoLabel(passwordTextField, lbl: passLabel)
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        configureUI()
     }
     
-    func setupInfoLabel(_ tf: UITextField, lbl: UILabel) {
-        lbl.isHidden = !tf.hasText
+    // MARK: - Actions
+    @IBAction func passwordSecureButton(_ sender: UIButton) {
+        passwordTextField.isSecureTextEntry.toggle()
+        let title = passwordTextField.isSecureTextEntry ? "SHOW" : "HIDE"
+        sender.setTitle(title, for: .normal)
     }
     
-    func setupTextField() {
+    @IBAction func signInButtonTapped(_ sender: UIButton) {
+        guard let email = emailTextField.text, let password = passwordTextField.text else { return }
+        viewModel?.signIn(email: email, pass: password)
+    }
+}
+// MARK: - UI Configuration
+extension SignInViewController {
+    
+    private func configureUI() {
         emailTextField.addTarget(self, action: #selector(checkFormatEmailAndPass), for: .editingChanged)
         passwordTextField.addTarget(self, action: #selector(checkFormatEmailAndPass), for: .editingChanged)
+        emailTextField.autocorrectionType = .no
+        passwordTextField.autocorrectionType = .no
+        designPlaceholder(emailTextField, placeholderText: "Email or phone number", label: emailLabel)
+        designPlaceholder(passwordTextField, placeholderText: "Password", label: passLabel)
+        configureNavbar()
     }
     
+    private func designPlaceholder(_ textField: UITextField, placeholderText: String, label: UILabel) {
+        textField.attributedPlaceholder = NSAttributedString(string: placeholderText, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray3])
+        label.isHidden = !textField.hasText
+    }
+    
+    private func configureNavbar() {
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"), style: .done, target: self, action: #selector(backPreviousScreen))
+        let logoImage = UIImage(named: "netflixLogo")?.withRenderingMode(.alwaysOriginal)
+        let logoButton = UIBarButtonItem(image: logoImage, style: .done, target: nil, action: nil)
+        navigationItem.leftBarButtonItems = [backButton, logoButton]
+        navigationController?.navigationBar.backgroundColor = .black
+        navigationController?.navigationBar.tintColor = .white
+    }
+
+}
+
+// MARK: - Helper Methods
+extension SignInViewController {
     @objc func checkFormatEmailAndPass() {
         guard let email = emailTextField.text, let pass = passwordTextField.text else { return }
         signInButton.isEnabled = email.isValidEmail(email) && pass.isValidPassword(pass)
     }
     
-    private func designPlaceholder(_ tf: UITextField, playholderText: String) {
-        tf.attributedPlaceholder = NSAttributedString(string: playholderText, attributes: [NSAttributedString.Key.foregroundColor: UIColor.systemGray3])
+    @objc func backPreviousScreen() {
+        navigationController?.popViewController(animated: true)
+    }
+}
+
+// MARK: - Helper Methods
+extension SignInViewController: SignInViewModelDelegate {
+    
+    func signInSuccess() {
+        let tabBarViewController = TabBarViewController()
+        navigationController?.setViewControllers([tabBarViewController], animated: true)
+        navigationController?.navigationBar.isHidden = true
     }
     
-    
-    
-    private func configureNavbar() {
-        let yourBackImage = UIImage(systemName: "arrow.backward")
-        var image = UIImage(named: "netflixLogo")
-        image = image?.withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItems = [UIBarButtonItem(image: yourBackImage, style: .done, target: self, action: #selector(backPreviousScreen))
-                                             ,UIBarButtonItem(image: image, style: .done, target: self, action: nil)]
-        navigationController?.navigationBar.backgroundColor = .black
-        navigationController?.navigationBar.tintColor = .white
-    }
-    
-    @objc func backPreviousScreen(){
-        self.navigationController?.popViewController(animated: true)
-//        let displayVC = DisplayViewController()
-//        self.navigationController?.pushViewController(displayVC, animated: true)
+    func signInFailure(with error: String) {
+        showAlert(title: "Login fail", message: error)
     }
     
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let ok = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(ok)
+        let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alert.addAction(okAction)
         present(alert, animated: true, completion: nil)
     }
-    
-    func signIn(email: String, password: String) {
-        Task {
-            do {
-                try await signInViewModel.signIn(email: email, pass: password)
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    let tabBarViewControlller = TabBarViewController()
-                    self.navigationController?.setViewControllers([tabBarViewControlller], animated: true)
-                    self.navigationController?.navigationBar.isHidden = true
-                }
-            } catch let error as SignInViewModel.AuthError {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.handleAuthError(error)
-                }
-            } catch {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    let message = "There was an error: \(error.localizedDescription)"
-                    self.showAlert(title: "Login fail", message: message)
-                }
-            }
-        }
-    }
-    
-    func handleAuthError(_ error: SignInViewModel.AuthError) {
-        switch error {
-        case .wrongPassword:
-            showAlert(title: "Login fail", message: "Wrong password.")
-        case .userNotFound:
-            showAlert(title: "Login fail", message: "User not found.")
-        case .unknownError:
-            showAlert(title: "Login fail", message: "Email or password is invalid!.")
-        }
-    }
 }
 
-class CustomNavigationController: UINavigationController {
-
-    override func popViewController(animated: Bool) -> UIViewController? {
-        // Ngăn chặn hành vi pop mặc định cho các view controller con
-        return nil
-    }
-}

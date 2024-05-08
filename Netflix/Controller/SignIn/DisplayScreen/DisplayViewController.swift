@@ -9,75 +9,74 @@ import UIKit
 
 class DisplayViewController: UIViewController {
     
-    private var viewModel = DisplayViewModel()
-      private var onboardingSlideViewModels: [OnboardingSlideViewModel] {
-          return viewModel.onboardingSlides
-      }
-      
-      lazy var pages: [OnboardingSlideView] = {
-          var views = [OnboardingSlideView]()
-          for slideViewModel in onboardingSlideViewModels {
-              let slideView = OnboardingSlideView()
-              slideView.configure(with: slideViewModel)
-              views.append(slideView)
-          }
-          return views
-      }()
     
     @IBOutlet weak var onboardingScrollView: UIScrollView!
     @IBOutlet weak var onboardingPageControl: UIPageControl!
     
+    // MARK: - Properties
+    private var viewModel = DisplayViewModel()
+    private var onboardingSlideVC: [OnboardingViewController] = []
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        bindViewModel()
+        configureOnboardingSlides()
         configureNavbar()
-        setupOnboardingScrollView()
-        onboardingPageControl.numberOfPages = pages.count
-        onboardingPageControl.currentPage = 0
-        onboardingPageControl.isUserInteractionEnabled = false
-        print("onboardingSlides:", viewModel.onboardingSlides)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
     }
     
     @IBAction func getStartedButton(_ sender: UIButton) {
-        didTabButton(sender)
+        didTapButton(sender)
     }
 }
     
+// MARK: - Helper Methods
 extension DisplayViewController {
     
-    @objc func didTabButton(_ button:UIButton){
+    private func bindViewModel() {
+        viewModel.fetchSlides()
+    }
+    
+    @objc func didTapButton(_ button: UIButton) {
         let signInVC = SignInViewController()
         self.navigationController?.pushViewController(signInVC, animated: true)
     }
     
     private func configureNavbar() {
-        var image = UIImage(named: "netflixLogo")
-        image = image?.withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign In", style: .plain, target: self, action: #selector(didTabButton(_:)))
+        let image = UIImage(named: "netflixLogo")?.withRenderingMode(.alwaysOriginal)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: nil, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign In", style: .plain, target: self, action: #selector(didTapButton(_:)))
         navigationController?.navigationBar.backgroundColor = .black
         navigationController?.navigationBar.tintColor = .white
     }
     
-    private func setupOnboardingScrollView() {
+    private func configureOnboardingSlides() {
+        for (index, onboardingSlide) in viewModel.onboardingSlides.enumerated() {
+            let slideView = OnboardingViewController(viewModel: OnboardingSlideViewModel(onboardingSlide: onboardingSlide))
+            slideView.view.frame = CGRect(x: CGFloat(index) * view.frame.width, y: 0, width: view.frame.width, height: view.frame.height)
+            addChild(slideView)
+            onboardingScrollView.addSubview(slideView.view)
+            slideView.didMove(toParent: self)
+        }
+        
+        onboardingScrollView.contentSize = CGSize(width: view.frame.width * CGFloat(viewModel.onboardingSlides.count), height: view.frame.height)
+        onboardingScrollView.isPagingEnabled = true
+        onboardingScrollView.showsHorizontalScrollIndicator = false
         onboardingScrollView.delegate = self
-        onboardingScrollView.showsVerticalScrollIndicator = false
-        
-        // Xóa các subviews cũ trước khi thêm mới
-        for subview in onboardingScrollView.subviews {
-            subview.removeFromSuperview()
-        }
-        
-        // Thêm các OnboardingSlideView vào onboardingScrollView
-        for (index, page) in pages.enumerated() {
-            page.frame = CGRect(x: view.frame.width * CGFloat(index), y: 0, width: view.frame.width, height: onboardingScrollView.frame.height)
-            onboardingScrollView.addSubview(page)
-        }
-        
-        // Cập nhật lại contentSize của onboardingScrollView
-        onboardingScrollView.contentSize = CGSize(width: view.frame.width * CGFloat(pages.count), height: onboardingScrollView.frame.height)
+        onboardingPageControl.numberOfPages = viewModel.onboardingSlides.count
+        onboardingPageControl.currentPage = 0
+        onboardingPageControl.isUserInteractionEnabled = false
     }
 }
 
+
+
+// MARK: - UIScrollViewDelegate
 extension DisplayViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let pageIndex = round(scrollView.contentOffset.x / view.frame.width)
