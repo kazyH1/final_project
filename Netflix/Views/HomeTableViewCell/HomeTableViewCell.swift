@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol HomeTableViewCellDelegate: AnyObject {
+    func didSelectMovie(at indexPath: IndexPath)
+}
+
 class HomeTableViewCell: UITableViewCell {
+    
+    weak var delegate: HomeTableViewCellDelegate?
     
     private var movies: [Movie] = [Movie]()
     
@@ -48,9 +54,7 @@ extension  HomeTableViewCell: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("her")
-        let moviesDetailVC = MovieDetailViewController()
-        UINavigationController().pushViewController(moviesDetailVC, animated: true)
+        delegate?.didSelectMovie(at: indexPath)
     }
     
     public func configure(with movies: [Movie]) {
@@ -59,4 +63,11 @@ extension  HomeTableViewCell: UICollectionViewDelegate, UICollectionViewDataSour
             self?.moviesCollectionView.reloadData()
         }
     }
+    
+    func movie(at index: Int) -> Movie? {
+           guard index >= 0 && index < movies.count else {
+               return nil
+           }
+           return movies[index]
+       }
 }

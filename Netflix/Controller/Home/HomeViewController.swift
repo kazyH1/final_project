@@ -10,6 +10,7 @@ import FirebaseAuth
 
 class HomeViewController: UIViewController {
     
+    
     @IBOutlet private weak var homeFeedTableView: UITableView!
     
     // MARK: - Properties
@@ -95,6 +96,15 @@ extension HomeViewController {
         }
     }
     
+    private func handleResult(_ result: Result<[Movie], Error>, for cell: HomeTableViewCell) {
+        switch result {
+        case .success(let movies):
+            cell.configure(with: movies)
+        case .failure(let error):
+            print("Failed to fetch movies: \(error.localizedDescription)")
+        }
+    }
+    
     private func configureHeaderView() {
         viewModel?.fetchTrendingMoviePosterPath { [weak self] result in
             switch result {
@@ -103,15 +113,6 @@ extension HomeViewController {
             case .failure(let error):
                 print("Failed to configure header view: \(error.localizedDescription)")
             }
-        }
-    }
-    
-    private func handleResult(_ result: Result<[Movie], Error>, for cell: HomeTableViewCell) {
-        switch result {
-        case .success(let movies):
-            cell.configure(with: movies)
-        case .failure(let error):
-            print("Failed to fetch movies: \(error.localizedDescription)")
         }
     }
 }
@@ -156,6 +157,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = homeFeedTableView.dequeueReusableCell(withIdentifier: "HomeTableViewCell", for: indexPath) as? HomeTableViewCell else { return .init() }
         cell.registerCollecTionView()
         configureCell(for: cell, at: indexPath.section)
+        cell.delegate = self
         return cell
     }
     
@@ -174,4 +176,20 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate {
+    func didTapPlayButton() {
+        let movieDetailVC = MovieDetailViewController()
+        navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
+    
+    func didSelectMovie(at indexPath: IndexPath) {
+        guard let navigationController = self.navigationController else { return }
+        if let cell = homeFeedTableView.cellForRow(at: IndexPath(row: 0, section: indexPath.section)) as? HomeTableViewCell,
+           let movie = cell.movie(at: indexPath.row) {
+            let movieDetailVC = MovieDetailViewController()
+            movieDetailVC.movieId = movie.id
+            navigationController.pushViewController(movieDetailVC, animated: true)
+        }
+    }
+}
 

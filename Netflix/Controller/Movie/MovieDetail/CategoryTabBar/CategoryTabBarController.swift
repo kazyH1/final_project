@@ -19,6 +19,7 @@ class CategoryTabBarController: TabmanViewController {
         self.dataSource = self
         // Create bar
         setupBar()
+        
     }
     
     func setupBar() {

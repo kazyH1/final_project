@@ -13,6 +13,8 @@ class HeaderView: UIView {
     private let infoButton = UIButton()
     private let addMyListButton = UIButton()
     
+    weak var delegate: HomeHeaderViewDelegate?
+    
     private let playButton: UIButton = {
         let button = UIButton()
         button.layer.backgroundColor = UIColor.white.cgColor
@@ -22,7 +24,7 @@ class HeaderView: UIView {
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         button.layer.cornerRadius = 5
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(didTabButton), for: .editingDidBegin)
+        button.addTarget(HeaderView.self, action: #selector(didTabButton), for: .editingDidBegin)
         return button
     }()
    
@@ -108,12 +110,15 @@ class HeaderView: UIView {
     }
     
     @objc func didTabButton(){
-        let moviesDetailVC = MovieDetailViewController()
-        UINavigationController().pushViewController(moviesDetailVC, animated: true)
+        delegate?.didTapPlayButton()
     }
     
     public func configure(with poster: String) {
           guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(poster)") else {return}
           headerImageView.sd_setImage(with: url, completed: nil)
       }
+}
+
+protocol HomeHeaderViewDelegate: AnyObject {
+    func didTapPlayButton()
 }
