@@ -14,6 +14,7 @@ class HeaderView: UIView {
     private let addMyListButton = UIButton()
     
     weak var delegate: HomeHeaderViewDelegate?
+    private var movieId = 0
     
     private let playButton: UIButton = {
         let button = UIButton()
@@ -24,10 +25,9 @@ class HeaderView: UIView {
         button.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         button.layer.cornerRadius = 5
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(HeaderView.self, action: #selector(didTabButton), for: .editingDidBegin)
         return button
     }()
-   
+    
     
     func designButton(button: UIButton, image: String){
         let image = UIImage(named: image)
@@ -61,6 +61,9 @@ class HeaderView: UIView {
         addSubview(playButton)
         addSubview(infoButton)
         addSubview(addMyListButton)
+        playButton.addTarget(delegate, action: #selector(didTabButton), for: .touchUpInside)
+        addMyListButton.addTarget(delegate, action: #selector(didTabMyListButton), for: .touchUpInside)
+        infoButton.addTarget(delegate, action: #selector(didTapInfoButton), for: .touchUpInside)
     }
     
     override func layoutSubviews() {
@@ -110,15 +113,32 @@ class HeaderView: UIView {
     }
     
     @objc func didTabButton(){
-        delegate?.didTapPlayButton()
+        guard let delegate = delegate else { return }
+        delegate.didTapPlayButton(at: movieId)
     }
     
-    public func configure(with poster: String) {
-          guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(poster)") else {return}
-          headerImageView.sd_setImage(with: url, completed: nil)
-      }
+    @objc func didTabMyListButton(){
+        guard let delegate = delegate else { return }
+        delegate.didTapMyListButton()
+    }
+    
+    @objc func didTapInfoButton(){
+        guard let delegate = delegate else { return }
+        delegate.didTapInfoButton()
+    }
+    
+    public func configure(with posterPath: String?, id: Int) {
+        self.movieId = id
+        if let posterPath = posterPath {
+            guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)") else { return }
+            headerImageView.sd_setImage(with: url, completed: nil)
+        }
+    }
 }
 
 protocol HomeHeaderViewDelegate: AnyObject {
-    func didTapPlayButton()
+    func didTapPlayButton(at id: Int)
+    func didTapMyListButton()
+    func didTapInfoButton()
 }
+

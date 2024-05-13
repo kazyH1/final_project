@@ -8,18 +8,29 @@
 import Foundation
 import Tabman
 import Pageboy
+import SwiftEventBus
 
 class CategoryTabBarController: TabmanViewController {
-    private var viewControllers = [EpisodesViewController(), MoreLikeThisTableViewController()]
+    private var viewControllers = [EpisodesViewController(), CollectionViewController(), MoreLikeThisViewController(), TrailersMoreViewController()]
     
-    private var titleViewController = ["Episodes","More like this"]
+    private var titleViewController = ["Episodes","Collection","More like this", "Trailers & More"]
+    
+    var movieDetails : MovieDetailResponse? = nil
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        SwiftEventBus.unregister(self)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        SwiftEventBus.onMainThread(self, name: "updateCategoryTab") { result in
+            self.movieDetails = result?.object as? MovieDetailResponse
+             }
         self.dataSource = self
         // Create bar
         setupBar()
-        
     }
     
     func setupBar() {
@@ -44,6 +55,9 @@ extension CategoryTabBarController: PageboyViewControllerDataSource, TMBarDataSo
     
     func viewController(for pageboyViewController: PageboyViewController,
                         at index: PageboyViewController.PageIndex) -> UIViewController? {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .microseconds(1000), execute: {
+            SwiftEventBus.post("updateCategoryTab", sender: self.movieDetails)
+        })
         return viewControllers[index]
     }
     

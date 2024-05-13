@@ -12,8 +12,11 @@ target 'Netflix' do
   pod 'FirebaseFirestore'
   pod 'SDWebImage', '~> 5.0'
   pod 'SDWebImage/MapKit'
+  pod 'youtube-ios-player-helper'
   # Pods for Netflix
   pod 'Tabman', '~> 3.2'
+  pod 'Toast-Swift', '~> 5.1.1'
+  pod 'SwiftEventBus', :tag => '5.1.0', :git => 'https://github.com/cesarferreira/SwiftEventBus.git'
 
   target 'NetflixTests' do
     inherit! :search_paths

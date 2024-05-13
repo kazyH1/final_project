@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CollectTableViewCell" customModule="Netflix" propertyAccessControl="none">
+            <connections>
+                <outlet property="contentEpisodesLabel" destination="Ycx-Oh-M26" id="dJJ-7v-ynk"/>
+                <outlet property="contentLabel" destination="Ycx-Oh-M26" id="GwZ-cg-Ogk"/>
+                <outlet property="imgCollection" destination="uql-W4-QOP" id="L1L-un-Erp"/>
+                <outlet property="nameEpisodesLabel" destination="cVt-ex-0YR" id="7aw-aE-YOg"/>
+                <outlet property="nameLabel" destination="cVt-ex-0YR" id="QC3-tY-mXo"/>
+                <outlet property="timeLabel" destination="2k8-cH-MLZ" id="DHD-XP-8IP"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="252" id="KGk-i7-Jjw" userLabel="Collection Table View Cell" customClass="CollectionTableViewCell" customModule="Netflix">
+            <rect key="frame" x="0.0" y="0.0" width="467" height="252"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM" customClass="CollectTableViewCell" customModule="Netflix">
+                <rect key="frame" x="0.0" y="0.0" width="467" height="252"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cVt-ex-0YR" userLabel="Name Episode Label">
+                        <rect key="frame" x="170" y="17" width="0.0" height="118"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2k8-cH-MLZ" userLabel="Time Label">
+                        <rect key="frame" x="173" y="140" width="0.0" height="0.0"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="uql-W4-QOP" userLabel="Image Collect">
+                        <rect key="frame" x="12" y="20" width="150" height="100"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <directionalEdgeInsets key="directionalLayoutMargins" top="8" leading="8" bottom="8" trailing="8"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ycx-Oh-M26" userLabel="Content Label">
+                        <rect key="frame" x="144" y="156" width="447" height="112"/>
+                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="2k8-cH-MLZ" firstAttribute="top" secondItem="cVt-ex-0YR" secondAttribute="bottom" constant="5" id="3ff-yc-6jH"/>
+                    <constraint firstItem="2k8-cH-MLZ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="173" id="5sn-Sv-Lzb"/>
+                    <constraint firstAttribute="bottom" secondItem="Ycx-Oh-M26" secondAttribute="bottom" constant="-16" id="Np4-9E-Ohq"/>
+                    <constraint firstAttribute="trailing" secondItem="Ycx-Oh-M26" secondAttribute="trailing" constant="-124" id="VAm-GX-Lmk"/>
+                    <constraint firstItem="Ycx-Oh-M26" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="bottom" constant="-96" id="ZvV-eJ-kZd"/>
+                    <constraint firstItem="Ycx-Oh-M26" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="144" id="nBK-1e-DLl"/>
+                    <constraint firstItem="cVt-ex-0YR" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-50" id="nTN-lP-X1T"/>
+                    <constraint firstItem="cVt-ex-0YR" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="170" id="xC0-Ep-0Po"/>
+                    <constraint firstItem="cVt-ex-0YR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="5" id="yke-qs-aka"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <point key="canvasLocation" x="238.93129770992365" y="-11.267605633802818"/>
+        </tableViewCell>
+    </objects>
+</document>

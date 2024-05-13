@@ -8,7 +8,7 @@
 import UIKit
 
 protocol HomeTableViewCellDelegate: AnyObject {
-    func didSelectMovie(at indexPath: IndexPath)
+    func didSelectMovie(at id: Int)
 }
 
 class HomeTableViewCell: UITableViewCell {
@@ -21,6 +21,7 @@ class HomeTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        registerCollecTionView()
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -54,7 +55,7 @@ extension  HomeTableViewCell: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.didSelectMovie(at: indexPath)
+        delegate?.didSelectMovie(at: movies[indexPath.row].id ?? 0)
     }
     
     public func configure(with movies: [Movie]) {

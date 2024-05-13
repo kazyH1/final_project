@@ -8,24 +8,23 @@
 import Foundation
 import UIKit
 extension UIColor {
-    convenience init(hex: String) {
-           var chars = Array(hex.hasPrefix("#") ? hex.dropFirst() : hex[...])
-           let red, green, blue, alpha: CGFloat
-           switch chars.count {
-           case 3:
-               chars = chars.flatMap { [$0, $0] }
-               fallthrough
-           case 6:
-               chars = ["F","F"] + chars
-               fallthrough
-           case 8:
-               red   = CGFloat(strtoul(String(chars[1...2]), nil, 16)) / 255
-               green = CGFloat(strtoul(String(chars[3...4]), nil, 16)) / 255
-               blue  = CGFloat(strtoul(String(chars[5...6]), nil, 16)) / 255
-               alpha = CGFloat(strtoul(String(chars[7...8]), nil, 16)) / 255
-           default:
-               red = 1; green = 1; blue = 1; alpha = 1
-           }
-           self.init(red: red, green: green, blue: blue, alpha: alpha)
-       }
+  convenience init(_ hex: String, alpha: CGFloat = 1.0) {
+    var cString = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+    
+    if cString.hasPrefix("#") { cString.removeFirst() }
+    
+    if cString.count != 6 {
+      self.init("ff0000") // return red color for wrong hex input
+      return
+    }
+    
+    var rgbValue: UInt64 = 0
+    Scanner(string: cString).scanHexInt64(&rgbValue)
+    
+    self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+              green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+              blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+              alpha: alpha)
+  }
+
 }

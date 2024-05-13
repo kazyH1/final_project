@@ -8,9 +8,10 @@
 import Foundation
 
 struct MovieDetailResponse: Codable {
-    let id: Int
+    let id: Int?
     let title: String
     let tagline: String
+    let overview: String
     let videos: Results
 }
 

@@ -8,7 +8,5 @@
 import Foundation
 import UIKit
 extension UIViewController {
-    protocol navBar {
-        func configureNavbar()
-    }
+
 }

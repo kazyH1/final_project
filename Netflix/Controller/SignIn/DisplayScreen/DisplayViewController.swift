@@ -42,9 +42,17 @@ extension DisplayViewController {
         viewModel.fetchSlides()
     }
     
+    private func bypassLogin(){
+        let tabBarViewController = TabBarViewController()
+        navigationController?.setViewControllers([tabBarViewController], animated: true)
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     @objc func didTapButton(_ button: UIButton) {
-        let signInVC = SignInViewController()
-        self.navigationController?.pushViewController(signInVC, animated: true)
+        bypassLogin()
+        return
+//        let signInVC = SignInViewController()
+//        self.navigationController?.pushViewController(signInVC, animated: true)
     }
     
     private func configureNavbar() {

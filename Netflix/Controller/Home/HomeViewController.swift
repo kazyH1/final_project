@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class HomeViewController: UIViewController {
+class HomeViewController: BaseViewController {
     
     
     @IBOutlet private weak var homeFeedTableView: UITableView!
@@ -35,10 +35,9 @@ class HomeViewController: UIViewController {
         
         setupTableView()
         configureNavbar()
-        
+        setupTableHeaderView()
         // Configure header view
-        configureHeaderView()
-        setupHeaderView()
+        getMovieForTableHeaderView()
     }
     
 }
@@ -53,21 +52,14 @@ extension HomeViewController {
         homeFeedTableView.register(UINib(nibName: "HeaderInSectionView", bundle: nil), forHeaderFooterViewReuseIdentifier: "HeaderInSectionView")
     }
     
-    private func setupHeaderView() {
+    private func setupTableHeaderView() {
         let heightOfHeaderView = view.bounds.height * 3 / 5
         let widthOfHeaderView = view.bounds.width
         let headerHeight = traitCollection.horizontalSizeClass == .regular && traitCollection.verticalSizeClass == .regular ? heightOfHeaderView + 400 : heightOfHeaderView
         let headerView = HeaderView(frame: CGRect(x: 0, y: 0, width: widthOfHeaderView, height: headerHeight))
         homeFeedTableView.tableHeaderView = headerView
         self.headerView = headerView
-    }
-    
-    private func configureNavbar() {
-        var image = UIImage(named: "netflixLogo")
-        image = image?.withRenderingMode(.alwaysOriginal)
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "userIcon"), style: .done, target: self, action: #selector(handleLogout))
-        navigationController?.navigationBar.tintColor = .white
+        self.headerView?.delegate = self
     }
 }
 
@@ -90,7 +82,6 @@ extension HomeViewController {
         default:
             return
         }
-        
         viewModel?.getMovies(for: category) { result in
             self.handleResult(result, for: cell)
         }
@@ -105,11 +96,13 @@ extension HomeViewController {
         }
     }
     
-    private func configureHeaderView() {
+    private func getMovieForTableHeaderView() {
         viewModel?.fetchTrendingMoviePosterPath { [weak self] result in
             switch result {
-            case .success(let posterPath):
-                self?.headerView?.configure(with: posterPath)
+            case .success(let movies):
+                if let randomMovie = movies.first {
+                    self?.headerView?.configure(with: randomMovie.poster_path, id: randomMovie.id ?? 0)
+                }
             case .failure(let error):
                 print("Failed to configure header view: \(error.localizedDescription)")
             }
@@ -117,31 +110,13 @@ extension HomeViewController {
     }
 }
 
-//MARK: - Helper Methods
-extension HomeViewController {
-    @objc func showDetail(_ button:UIButton){
-        let listVC = ListMovieViewController()
-        self.navigationController?.pushViewController(listVC, animated: true)
-    }
-    
-    @objc func handleLogout() {
-        viewModel?.logOut()
-        let displayVC = DisplayViewController()
-        let navigationController = UINavigationController(rootViewController: displayVC)
-        navigationController.modalPresentationStyle = .fullScreen
-        present(navigationController, animated: true, completion: nil)
-    }
-}
 
 //MARK: TableView
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "HeaderInSectionView") as? HeaderInSectionView else {return .init()}
-        headerView.sectionTitle.text = sectionTitles[section]
-        headerView.sectionTitle.text = headerView.sectionTitle.text?.capitalizeFirstLetter()
-        headerView.seeAllButton.addTarget(self, action: #selector(showDetail(_:)), for: .touchUpInside)
-        headerView.seeAllButton.tag = section
+        headerView.sectionTitle.text = sectionTitles[section].capitalizeFirstLetter()
         return headerView
     }
     
@@ -177,19 +152,26 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate {
-    func didTapPlayButton() {
+    func didTapPlayButton(at id: Int) {
         let movieDetailVC = MovieDetailViewController()
-        navigationController?.pushViewController(movieDetailVC, animated: true)
+            movieDetailVC.movieId = id
+            navigationController?.pushViewController(movieDetailVC, animated: true)
     }
     
-    func didSelectMovie(at indexPath: IndexPath) {
-        guard let navigationController = self.navigationController else { return }
-        if let cell = homeFeedTableView.cellForRow(at: IndexPath(row: 0, section: indexPath.section)) as? HomeTableViewCell,
-           let movie = cell.movie(at: indexPath.row) {
-            let movieDetailVC = MovieDetailViewController()
-            movieDetailVC.movieId = movie.id
-            navigationController.pushViewController(movieDetailVC, animated: true)
-        }
+    func didTapMyListButton() {
+        let movieDetailVC = MyListViewController()
+            navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
+    
+    func didTapInfoButton() {
+        let movieDetailVC = InfoViewController()
+            navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
+    
+    func didSelectMovie(at id: Int) {
+        let movieDetailVC = MovieDetailViewController()
+        movieDetailVC.movieId = id
+        navigationController?.pushViewController(movieDetailVC, animated: true)
     }
 }
 

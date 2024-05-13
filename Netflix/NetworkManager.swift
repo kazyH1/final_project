@@ -34,7 +34,7 @@ class NetworkManager {
     func fetchMovies(endpoint: String, completion: @escaping (Result<[Movie], Error>) -> Void) {
         Task {
             do {
-                let movies: TrendingMoviesResponse = try await fetchData(from: endpoint)
+                let movies: MoviesResponse = try await fetchData(from: endpoint)
                 completion(.success(movies.results))
             } catch {
                 completion(.failure(error))

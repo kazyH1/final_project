@@ -7,20 +7,20 @@
 
 import UIKit
 import AVFoundation
+import youtube_ios_player_helper
+import SwiftEventBus
 
 class MovieDetailViewController: UIViewController {
-    @IBOutlet weak var trailerVideoView: UIView!
+    @IBOutlet weak var playerView: YTPlayerView!
     @IBOutlet weak var detailView: UIView!
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
     
     var movieId: Int?
+    var videos: [Video]?
     var viewModel: MovieDetailViewModel?
     
     private var categoryTabBarController = CategoryTabBarController()
-    private var player: AVPlayer?
-    private var playerLayer: AVPlayerLayer?
-    
     // MARK: - Initializers
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -36,16 +36,16 @@ class MovieDetailViewController: UIViewController {
         
         viewModel?.delegate = self
         guard let movieId = movieId else {
-            handleMissingMovieId()
             return
         }
-        print("MovieId: \(movieId)")
+        
         viewModel?.fetchMovieDetails(movieId: movieId) { [weak self] success in
             guard let strongSelf = self else { return }
             DispatchQueue.main.async {
                 if success {
                     if let movieDetails = strongSelf.viewModel?.movieDetails {
                         strongSelf.didFetchMovieDetails(details: movieDetails)
+                        SwiftEventBus.post("updateCategoryTab", sender: movieDetails)
                     }
                 } else {
                     strongSelf.handleFetchError()
@@ -55,26 +55,33 @@ class MovieDetailViewController: UIViewController {
         configureEpisodesViewController()
     }
     
-    private func handleMissingMovieId() {
-        print("k có Id ")
+    @IBAction func playButton(_ sender: UIButton) {
+        guard let videos = videos else {
+                // Không có video được tải xuống
+                return
+            }
+            guard let clipKey = videos.first(where: { $0.type == "Clip" })?.key else {
+                // Không tìm thấy video loại Clip
+                return
+            }
+            playVideo(with: clipKey)
     }
+    
     private func configureEpisodesViewController() {
         detailView.addSubview(categoryTabBarController.view)
         categoryTabBarController.view.frame = detailView.bounds
         addChild(categoryTabBarController)
         categoryTabBarController.didMove(toParent: self)
+    
     }
 }
 
 extension MovieDetailViewController: MovieDetailViewModelDelegate {
     func didFetchMovieDetails(details: MovieDetailResponse) {
         DispatchQueue.main.async { [weak self] in
-            print("Title: \(details.title)")
-            for video in details.videos.results {
-                print("Video: \(video.name), Key: \(video.key)")
-            }
             self?.titleLabel.text = details.title
-            self?.overviewLabel.text = details.tagline
+            self?.overviewLabel.text = details.overview
+            self?.videos = details.videos.results
             if let trailerKey = details.videos.results.first?.key {
                 self?.playVideo(with: trailerKey)
             }
@@ -86,20 +93,6 @@ extension MovieDetailViewController: MovieDetailViewModelDelegate {
         handleFetchError()
     }
     
-    private func playVideo(with trailerKey: String) {
-        guard let url = URL(string: "https://www.youtube.com/watch?v=\(trailerKey)") else {
-            print("Invalid video URL")
-            return
-        }
-        
-        let playerItem = AVPlayerItem(url: url)
-        player = AVPlayer(playerItem: playerItem)
-        playerLayer = AVPlayerLayer(player: player)
-        playerLayer?.frame = trailerVideoView.bounds
-        trailerVideoView.layer.addSublayer(playerLayer!)
-        player?.play()
-    }
-    
     private func handleFetchError() {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: "Error", message: "Failed to fetch movie details. Please try again later.", preferredStyle: .alert)
@@ -108,3 +101,13 @@ extension MovieDetailViewController: MovieDetailViewModelDelegate {
         }
     }
 }
+extension MovieDetailViewController: YTPlayerViewDelegate {
+    func playVideo(with trailerKey: String) {
+        playerView.load(withVideoId: trailerKey, playerVars: ["playsinline": 1])
+    }
+    
+    func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
+        playerView.playVideo()
+    }
+}
+

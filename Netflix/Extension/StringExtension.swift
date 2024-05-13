@@ -22,4 +22,25 @@ extension String {
     public func capitalizeFirstLetter() -> String {
             return self.prefix(1).uppercased() + self.lowercased().dropFirst()
     }
+    func getYoutubeFormattedDuration() -> String {
+
+        let formattedDuration = self.replacingOccurrences(of: "PT", with: "").replacingOccurrences(of: "H", with:":").replacingOccurrences(of: "M", with: ":").replacingOccurrences(of: "S", with: "")
+
+        let components = formattedDuration.components(separatedBy: ":")
+        var duration = ""
+        for component in components {
+            duration = duration.count > 0 ? duration + ":" : duration
+            if component.count < 2 {
+                duration += "0" + component
+                continue
+            }
+            if components.count < 2 {
+                duration = "00:"
+            }
+            duration += component
+        }
+
+        return duration
+
+    }
 }
