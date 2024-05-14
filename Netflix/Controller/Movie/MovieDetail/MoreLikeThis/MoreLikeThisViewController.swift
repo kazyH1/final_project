@@ -32,6 +32,7 @@ class MoreLikeThisViewController: UIViewController {
             self.update(videos: self.videoFilters)
              }
     }
+    // dùng delegate, 
     
     func update(videos: [Video]?){
         DispatchQueue.main.async {

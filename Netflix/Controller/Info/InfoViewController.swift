@@ -1,3 +1,10 @@
+//
+//  InfoViewController.swift
+//  Netflix
+//
+//  Created by HuyNguyen on 10/05/2024.
+//
+
 import UIKit
 
 final class InfoViewController: UIViewController {
@@ -34,7 +41,7 @@ final class InfoViewController: UIViewController {
     private func registerTableView() {
         infoTableView.dataSource = self
         infoTableView.delegate = self
-        infoTableView.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.identifier)
+        infoTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
     }
     
     private func fetchMovies() {
@@ -60,9 +67,8 @@ extension InfoViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier,for: indexPath) as? TitleTableViewCell else {return UITableViewCell()}
+        guard let cell = infoTableView.dequeueReusableCell(withIdentifier: "TitleTableViewCell", for: indexPath) as? TitleTableViewCell else { return .init() }
         cell.configure(with: TitleView(titleName: (movies[indexPath.row].original_title ?? movies[indexPath.row].original_name) ?? "Unknown", posterURL: movies[indexPath.row].poster_path ?? ""))
-        cell.backgroundColor = .black
         cell.selectionStyle = .none
         return cell
     }

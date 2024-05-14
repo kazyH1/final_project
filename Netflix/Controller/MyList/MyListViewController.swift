@@ -1,3 +1,10 @@
+//
+//  MyListViewController.swift
+//  Netflix
+//
+//  Created by HuyNguyen on 10/05/2024.
+//
+
 import UIKit
 
 final class MyListViewController: UIViewController {
@@ -31,7 +38,7 @@ final class MyListViewController: UIViewController {
     private func registerTableView() {
         myListTableView.dataSource = self
         myListTableView.delegate = self
-        myListTableView.register(TitleTableViewCell.self, forCellReuseIdentifier: TitleTableViewCell.identifier)
+        myListTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
     }
     
     private func fetchMyList() {
@@ -57,9 +64,8 @@ extension MyListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier,for: indexPath) as? TitleTableViewCell else {return UITableViewCell()}
+        guard let cell = myListTableView.dequeueReusableCell(withIdentifier: "TitleTableViewCell", for: indexPath) as? TitleTableViewCell else { return .init() }
         cell.configure(with: TitleView(titleName: (movies[indexPath.row].original_title ?? movies[indexPath.row].original_name) ?? "Unknown", posterURL: movies[indexPath.row].poster_path ?? ""))
-        cell.backgroundColor = .black
         cell.selectionStyle = .none
         return cell
     }

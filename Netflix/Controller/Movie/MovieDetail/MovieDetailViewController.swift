@@ -33,7 +33,6 @@ class MovieDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         viewModel?.delegate = self
         guard let movieId = movieId else {
             return
@@ -55,16 +54,12 @@ class MovieDetailViewController: UIViewController {
         configureEpisodesViewController()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, view.safeAreaInsets.top))
+    }
+    
     @IBAction func playButton(_ sender: UIButton) {
-        guard let videos = videos else {
-                // Không có video được tải xuống
-                return
-            }
-            guard let clipKey = videos.first(where: { $0.type == "Clip" })?.key else {
-                // Không tìm thấy video loại Clip
-                return
-            }
-            playVideo(with: clipKey)
+        playerView.playVideo()
     }
     
     private func configureEpisodesViewController() {
@@ -103,7 +98,11 @@ extension MovieDetailViewController: MovieDetailViewModelDelegate {
 }
 extension MovieDetailViewController: YTPlayerViewDelegate {
     func playVideo(with trailerKey: String) {
-        playerView.load(withVideoId: trailerKey, playerVars: ["playsinline": 1])
+        playerView.load(withVideoId: trailerKey, playerVars: ["playsinline" : 1,
+                                                              "showinfo" : 0,
+                                                              "rel" : 0,
+                                                              "controls" : 0,
+                                                              "fs": 0])
     }
     
     func playerViewDidBecomeReady(_ playerView: YTPlayerView) {

@@ -28,7 +28,6 @@ class HeaderView: UIView {
         return button
     }()
     
-    
     func designButton(button: UIButton, image: String){
         let image = UIImage(named: image)
         button.setImage(image, for: .normal)
