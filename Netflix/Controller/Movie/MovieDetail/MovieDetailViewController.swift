@@ -10,11 +10,13 @@ import AVFoundation
 import youtube_ios_player_helper
 import SwiftEventBus
 
-class MovieDetailViewController: UIViewController {
+class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
+    @IBOutlet weak var addMyListButton: UIButton!
     @IBOutlet weak var playerView: YTPlayerView!
     @IBOutlet weak var detailView: UIView!
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
+    
     
     var movieId: Int?
     var videos: [Video]?
@@ -34,7 +36,19 @@ class MovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel?.delegate = self
+        
+        configureEpisodesViewController()
+        
+        playerView.delegate = self
+        
+        //show button add to my list
+        self.addMyListButton.isHidden = false
+        
+        //show back button
+        navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, view.safeAreaInsets.top))
+       
         guard let movieId = movieId else {
+            handleMissingMovieId()
             return
         }
         
@@ -51,15 +65,7 @@ class MovieDetailViewController: UIViewController {
                 }
             }
         }
-        configureEpisodesViewController()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, view.safeAreaInsets.top))
-    }
-    
-    @IBAction func playButton(_ sender: UIButton) {
-        playerView.playVideo()
+      
     }
     
     private func configureEpisodesViewController() {
@@ -67,7 +73,49 @@ class MovieDetailViewController: UIViewController {
         categoryTabBarController.view.frame = detailView.bounds
         addChild(categoryTabBarController)
         categoryTabBarController.didMove(toParent: self)
+    }
     
+    @IBAction func addToMyList(_ sender: Any) {
+        let alertController = UIAlertController(title: "Success", message: "Added this movie to My List successful.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
+            self.addMyListButton.isHidden = true
+        }))
+        self.present(alertController, animated: true, completion: nil)
+        navigationItem.backBarButtonItem?.isHidden = true
+    }
+    
+    
+    @objc private func handleBackButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+   
+    
+    @IBAction func playButton(_ sender: UIButton) {
+        guard let videos = videos else {
+            return
+        }
+        guard let clipKey = videos.first(where: { $0.type == "Clip" })?.key else {
+            return
+        }
+        //navigation to watching screen
+        let watchingMovieVC = WatchingMovieViewController()
+        watchingMovieVC.movie = Movie(id: viewModel?.movieDetails?.id, key: clipKey, media_type: nil, original_name: nil, original_title: viewModel?.movieDetails?.title, poster_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
+        navigationController?.pushViewController(watchingMovieVC, animated: true)
+    }
+    
+    
+    private func handleMissingMovieId() {
+        print("k có Id ")
+    }
+    
+    func playVideo(with trailerKey: String) {
+        playerView.load(withVideoId: trailerKey, playerVars: ["playsinline" : 1, "showinfo" : 0, "rel" : 0, "controls" : 0, "fs": 0, "autoplay": 1, "autohide": 1, "modestbranding": 1])
+        playerViewDidBecomeReady(self.playerView)
+    }
+    
+    func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
+        playerView.playVideo()
     }
 }
 
@@ -91,22 +139,15 @@ extension MovieDetailViewController: MovieDetailViewModelDelegate {
     private func handleFetchError() {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: "Error", message: "Failed to fetch movie details. Please try again later.", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
+                self.onBack()
+            }))
             self.present(alertController, animated: true, completion: nil)
         }
     }
-}
-extension MovieDetailViewController: YTPlayerViewDelegate {
-    func playVideo(with trailerKey: String) {
-        playerView.load(withVideoId: trailerKey, playerVars: ["playsinline" : 1,
-                                                              "showinfo" : 0,
-                                                              "rel" : 0,
-                                                              "controls" : 0,
-                                                              "fs": 0])
-    }
     
-    func playerViewDidBecomeReady(_ playerView: YTPlayerView) {
-        playerView.playVideo()
+    func onBack(){
+        self.navigationController?.popViewController(animated: true)
     }
 }
 

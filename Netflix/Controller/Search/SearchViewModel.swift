@@ -22,6 +22,6 @@ class SearchViewModel {
     }
     
     func search(with query: String, completion: @escaping (Result<[Movie], Error>) -> Void) {
-        NetworkManager.shared.fetchMovies(endpoint: "search/movie&query=\(query)", completion: completion)
+        NetworkManager.shared.searchMovies(endpoint: "search/movie", query: query, completion: completion)
     }
 }

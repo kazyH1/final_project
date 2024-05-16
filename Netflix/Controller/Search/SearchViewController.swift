@@ -35,8 +35,6 @@ class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        title = "Search"
         registerTableView()
         
         navigationItem.searchController = searchController
@@ -46,8 +44,6 @@ class SearchViewController: UIViewController {
         fetchSearch()
     }
     
-    
-
     private func registerTableView() {
         searchTableView.dataSource = self
         searchTableView.delegate = self
@@ -126,8 +122,11 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension SearchViewController: UISearchResultsUpdating, SearchResultsViewControllerDelegate {
-    func searchResultsViewControllerDidItemTap(_ titlePreview: TitlePreview) {
-        
+    func searchResultsViewControllerDidItemTap(id: Int) {
+        //navigate to Detail
+        let movieDetailVC = MovieDetailViewController()
+        movieDetailVC.movieId = id
+        navigationController?.pushViewController(movieDetailVC, animated: true)
     }
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -141,15 +140,15 @@ extension SearchViewController: UISearchResultsUpdating, SearchResultsViewContro
         resultsController.searchResultsCollectionView.backgroundColor = .black
         
         viewModel?.search(with: query) { result in
-            switch result {
-            case .success(let movie):
-                resultsController.movies = movie
-                resultsController.searchResultsCollectionView.reloadData()
-            case .failure(let error):
-                print(error.localizedDescription)
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movie):
+                    resultsController.movies = movie
+                    resultsController.searchResultsCollectionView.reloadData()
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
             }
         }
     }
 }
-
-

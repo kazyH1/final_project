@@ -11,7 +11,7 @@ class HeaderView: UIView {
     
     private let gradientLayer = CAGradientLayer()
     private let infoButton = UIButton()
-    private let addMyListButton = UIButton()
+    let addMyListButton = UIButton()
     
     weak var delegate: HomeHeaderViewDelegate?
     private var movieId = 0

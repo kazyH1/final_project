@@ -74,9 +74,11 @@ extension MoreLikeThisViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        //let movieDetailVC = MovieDetailViewController()
-        //movieDetailVC.playVideo(with: "ZRCF8GP25sw")
-        //navigationController?.pushViewController(movieDetailVC, animated: true)
+        let video = videoFilters[indexPath.row]
+        let posterPath = "https://img.youtube.com/vi/\(video.key)/0.jpg"
+        let watchingMovieVC = WatchingMovieViewController()
+        watchingMovieVC.movie = Movie(id: nil, key: video.key, media_type: nil, original_name: nil, original_title: video.name, poster_path: posterPath, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
+        navigationController?.pushViewController(watchingMovieVC, animated: true)
     }
     
     

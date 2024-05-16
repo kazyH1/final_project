@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import SwiftEventBus
 
 class HomeViewController: BaseViewController {
     
@@ -18,6 +19,7 @@ class HomeViewController: BaseViewController {
     private var headerView: HeaderView?
     private var randomTrendingMovie: Movie?
     private let sectionTitles: [String] = ["Trending Movies", "Trending Tv", "Popular", "Upcoming Movies", "Top rated"]
+    var moviesMyList: [Movie]?
     
     // MARK: - Initializers
     init() {
@@ -101,6 +103,7 @@ extension HomeViewController {
             switch result {
             case .success(let movies):
                 if let randomMovie = movies.first {
+                    self?.randomTrendingMovie = randomMovie
                     self?.headerView?.configure(with: randomMovie.poster_path, id: randomMovie.id ?? 0)
                 }
             case .failure(let error):
@@ -153,14 +156,60 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate {
     func didTapPlayButton(at id: Int) {
-        let movieDetailVC = MovieDetailViewController()
-            movieDetailVC.movieId = id
-            navigationController?.pushViewController(movieDetailVC, animated: true)
+        pushMovieDetails(id: id)
     }
     
     func didTapMyListButton() {
-        let movieDetailVC = MyListViewController()
-            navigationController?.pushViewController(movieDetailVC, animated: true)
+        var message = ""
+        var title = ""
+        var action = "OK"
+        if(randomTrendingMovie == nil) {
+            message = "Can't add this movie to My List"
+            title = "Error"
+            action = "OK"
+            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: action, style: .default, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        if let randomTrendingMovie = randomTrendingMovie {
+            if !checkMovieExistMyList(movie: randomTrendingMovie) {
+                if var moviesMyList = moviesMyList {
+                    moviesMyList.append(randomTrendingMovie)
+                    Movie.saveMyListMovie(movies: moviesMyList)
+                    message = "Added this movie to My List successful."
+                    title = "Success"
+                    action = "OK"
+                    // event to update MyList screen
+                    self.headerView?.addMyListButton.isHidden = true
+                    SwiftEventBus.post("AddToMyList")
+                } else {
+                    // Handle case where moviesMyList is nil
+                    // You might want to initialize it if that's the desired behavior
+                    moviesMyList = [randomTrendingMovie]
+                    Movie.saveMyListMovie(movies: moviesMyList!)
+                    message = "Added this movie to My List successful."
+                    title = "Success"
+                    action = "OK"
+                    // event to update MyList screen
+                    self.headerView?.addMyListButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+                    SwiftEventBus.post("AddToMyList")
+                }
+            } else {
+                message = "This movie was added to My List."
+                title = "Movie Exist"
+                action = "Hide"
+            }
+        } else {
+            // Handle case where randomTrendingMovie is nil
+            message = "No movie selected."
+            title = "Error"
+            action = "OK"
+        }
+
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: action, style: .default, handler: nil))
+        self.present(alertController, animated: true, completion: nil)
     }
     
     func didTapInfoButton() {
@@ -169,9 +218,23 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
     }
     
     func didSelectMovie(at id: Int) {
+        pushMovieDetails(id: id)
+    }
+    
+    func pushMovieDetails(id: Int){
         let movieDetailVC = MovieDetailViewController()
         movieDetailVC.movieId = id
+        movieDetailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
-}
+    
+    private func checkMovieExistMyList(movie: Movie?) -> Bool{
+            guard let movie = movie, let moviesMyList = moviesMyList else {
+                return false
+            }
+            
+            return moviesMyList.contains(where: { $0.id == movie.id })
+        }
+    }
+
 

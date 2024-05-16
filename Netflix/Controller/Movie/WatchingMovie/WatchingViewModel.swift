@@ -6,3 +6,13 @@
 //
 
 import Foundation
+protocol WatchingMovieViewModelDelegate: AnyObject {
+    func didFetchMovieDetails(details: MovieDetailResponse)
+    func fetchMovieDetailsDidFail(error: Error)
+}
+
+class WatchingMovieViewModel {
+
+    weak var delegate: WatchingMovieViewModelDelegate?
+    
+}
