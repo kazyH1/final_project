@@ -38,8 +38,10 @@ class HomeViewController: BaseViewController {
         setupTableView()
         configureNavbar()
         setupTableHeaderView()
+        moviesMyList = Movie.getMyListMovie() ?? []
         // Configure header view
         getMovieForTableHeaderView()
+        self.headerView?.addMyListButton.isHidden = checkMovieExistMyList(movie: randomTrendingMovie)
     }
     
 }
@@ -99,15 +101,27 @@ extension HomeViewController {
     }
     
     private func getMovieForTableHeaderView() {
+        self.showSpinner(onView: self.view)
         viewModel?.fetchTrendingMoviePosterPath { [weak self] result in
             switch result {
             case .success(let movies):
                 if let randomMovie = movies.first {
                     self?.randomTrendingMovie = randomMovie
-                    self?.headerView?.configure(with: randomMovie.poster_path, id: randomMovie.id ?? 0)
+                    self?.headerView?.configure(movie: randomMovie)
                 }
+                else {
+                    let alertController = UIAlertController(title: "Error", message: "Failed to loading movie", preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "Exit App", style: .default) { _ in
+                        exit(0)
+                    }
+
+                    alertController.addAction(okAction)
+                    self?.present(alertController, animated: true, completion: nil)
+                }
+                self?.removeSpinner()
             case .failure(let error):
                 print("Failed to configure header view: \(error.localizedDescription)")
+                self?.removeSpinner()
             }
         }
     }
@@ -155,58 +169,39 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate {
-    func didTapPlayButton(at id: Int) {
-        pushMovieDetails(id: id)
+    func didTapPlayButton(movie: Movie) {
+        pushMovieDetails(movie: movie)
     }
     
     func didTapMyListButton() {
+
+        if(randomTrendingMovie == nil) {
+//            message = "Can't add this movie to My List"
+//            title = "Error"
+//            action = "OK"
+//            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+//            alertController.addAction(UIAlertAction(title: action, style: .default, handler: nil))
+//            self.present(alertController, animated: true, completion: nil)
+            return
+        }
         var message = ""
         var title = ""
         var action = "OK"
-        if(randomTrendingMovie == nil) {
-            message = "Can't add this movie to My List"
-            title = "Error"
+        if(!checkMovieExistMyList(movie: randomTrendingMovie)){
+            moviesMyList!.append(randomTrendingMovie!)
+            Movie.saveMyListMovie(movies: moviesMyList ?? [])
+            message = "Added this movie to My List successful."
+            title = "Success"
             action = "OK"
-            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: action, style: .default, handler: nil))
-            self.present(alertController, animated: true, completion: nil)
-            return
-        }
-        if let randomTrendingMovie = randomTrendingMovie {
-            if !checkMovieExistMyList(movie: randomTrendingMovie) {
-                if var moviesMyList = moviesMyList {
-                    moviesMyList.append(randomTrendingMovie)
-                    Movie.saveMyListMovie(movies: moviesMyList)
-                    message = "Added this movie to My List successful."
-                    title = "Success"
-                    action = "OK"
-                    // event to update MyList screen
-                    self.headerView?.addMyListButton.isHidden = true
-                    SwiftEventBus.post("AddToMyList")
-                } else {
-                    // Handle case where moviesMyList is nil
-                    // You might want to initialize it if that's the desired behavior
-                    moviesMyList = [randomTrendingMovie]
-                    Movie.saveMyListMovie(movies: moviesMyList!)
-                    message = "Added this movie to My List successful."
-                    title = "Success"
-                    action = "OK"
-                    // event to update MyList screen
-                    self.headerView?.addMyListButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-                    SwiftEventBus.post("AddToMyList")
-                }
-            } else {
-                message = "This movie was added to My List."
-                title = "Movie Exist"
-                action = "Hide"
-            }
+            //event to update MyList screen
+            self.headerView?.addMyListButton.isHidden = true
+            SwiftEventBus.post("AddToMyList")
         } else {
-            // Handle case where randomTrendingMovie is nil
-            message = "No movie selected."
-            title = "Error"
-            action = "OK"
+            message = "This movie was added to My List."
+            title = "Movie Exist"
+            action = "Hide"
         }
-
+        
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: action, style: .default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
@@ -214,27 +209,30 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
     
     func didTapInfoButton() {
         let movieDetailVC = InfoViewController()
-            navigationController?.pushViewController(movieDetailVC, animated: true)
+        navigationController?.pushViewController(movieDetailVC, animated: true)
     }
     
-    func didSelectMovie(at id: Int) {
-        pushMovieDetails(id: id)
+    func didSelectMovie(movie: Movie) {
+        pushMovieDetails(movie: movie)
     }
     
-    func pushMovieDetails(id: Int){
+    func pushMovieDetails(movie: Movie){
         let movieDetailVC = MovieDetailViewController()
-        movieDetailVC.movieId = id
+        movieDetailVC.movie = movie
         movieDetailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
     
     private func checkMovieExistMyList(movie: Movie?) -> Bool{
-            guard let movie = movie, let moviesMyList = moviesMyList else {
-                return false
-            }
-            
-            return moviesMyList.contains(where: { $0.id == movie.id })
+        if(movie == nil) {
+            return false
+        }
+        if moviesMyList!.contains(where: {$0.id == movie!.id}) {
+            return true
+        } else {
+            return false
         }
     }
+}
 
 

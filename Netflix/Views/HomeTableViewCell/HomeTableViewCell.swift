@@ -8,7 +8,7 @@
 import UIKit
 
 protocol HomeTableViewCellDelegate: AnyObject {
-    func didSelectMovie(at id: Int)
+    func didSelectMovie(movie: Movie)
 }
 
 class HomeTableViewCell: UITableViewCell {
@@ -55,7 +55,7 @@ extension  HomeTableViewCell: UICollectionViewDelegate, UICollectionViewDataSour
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.didSelectMovie(at: movies[indexPath.row].id ?? 0)
+        delegate?.didSelectMovie(movie: movies[indexPath.row])
     }
     
     public func configure(with movies: [Movie]) {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class BaseViewController: UIViewController {
 
@@ -19,12 +20,13 @@ class BaseViewController: UIViewController {
         var image = UIImage(named: "netflixLogo")
         image = image?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "userIcon"), style: .done, target: self, action: #selector(handleLogout))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .done, target: self, action: #selector(handleLogout))
         navigationController?.navigationBar.tintColor = .white
     }
     
     
     @objc func handleLogout() {
+        NetworkManager.shared.logOut()
         let displayVC = DisplayViewController()
         let navigationController = UINavigationController(rootViewController: displayVC)
         navigationController.modalPresentationStyle = .fullScreen

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 enum APIError: Error {
     case failedToGetData
@@ -54,6 +55,15 @@ class NetworkManager {
             } catch {
                 completion(.failure(error))
             }
+        }
+    }
+    
+    func logOut() {
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+        } catch {
+            print("Đăng xuất không thành công: \(error.localizedDescription)")
         }
     }
 }

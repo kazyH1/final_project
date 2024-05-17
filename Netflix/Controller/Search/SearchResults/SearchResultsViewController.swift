@@ -7,7 +7,7 @@
 
 import UIKit
 protocol SearchResultsViewControllerDelegate: AnyObject {
-    func searchResultsViewControllerDidItemTap(id: Int)
+    func searchResultsViewControllerDidItemTap(movie: Movie)
 }
 
 class SearchResultsViewController: UIViewController {
@@ -53,6 +53,6 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
-        delegate?.searchResultsViewControllerDidItemTap(id: movies[indexPath.row].id ?? 0)
+        delegate?.searchResultsViewControllerDidItemTap(movie: movies[indexPath.row])
     }
 }

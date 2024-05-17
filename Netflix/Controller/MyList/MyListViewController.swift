@@ -6,33 +6,30 @@
 //
 
 import UIKit
+import SwiftEventBus
 
-final class MyListViewController: UIViewController {
+class MyListViewController: UIViewController {
+    
     @IBOutlet weak var myListTableView: UITableView!
     
-    private var movies: [Movie] = [Movie]()
-    private var viewModel: MyListViewModel?
-
-    // MARK: - Initializers
-    init() {
-        super.init(nibName: nil, bundle: nil)
-        self.viewModel = MyListViewModel()
-    }
-    
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var moviesMyList: [Movie]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "My List"
-        navigationController?.navigationBar.prefersLargeTitles = false
-      
+        configureNavigation()
+        navigationItem.title = "My List"
+        navigationController?.navigationBar.tintColor = .white
+        
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.white]
-        fetchMyList()
         registerTableView()
+        
+        fetchMovieInList()
+        //when receive this name, fetch MyList and update UI
+        SwiftEventBus.onMainThread(self, name: "AddToMyList") { result in self.fetchMovieInList()}
+        
+        
+        
     }
     
     private func registerTableView() {
@@ -41,31 +38,41 @@ final class MyListViewController: UIViewController {
         myListTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
     }
     
-    private func fetchMyList() {
-        viewModel?.fetchMyListMovies() { result in
-            switch result {
-            case .success(let movie):
-                self.movies = movie
-                DispatchQueue.main.async {
-                    self.myListTableView.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-            
+    func configureNavigation() {
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationItem.largeTitleDisplayMode = .always
+        
+        let navBarAppearance = UINavigationBarAppearance()
+        navBarAppearance.configureWithOpaqueBackground()
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navBarAppearance.backgroundColor = .black
+        navBarAppearance.shadowColor = nil
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
+    }
+    
+    private func fetchMovieInList() {
+        self.showSpinner(onView: self.view)
+        self.moviesMyList = Movie.getMyListMovie() ?? []
+        DispatchQueue.main.async {
+            self.myListTableView.reloadData()
+            self.removeSpinner()
         }
+        
     }
     
 }
 
 extension MyListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        movies.count
+        moviesMyList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = myListTableView.dequeueReusableCell(withIdentifier: "TitleTableViewCell", for: indexPath) as? TitleTableViewCell else { return .init() }
-        cell.configure(with: TitleView(titleName: (movies[indexPath.row].original_title ?? movies[indexPath.row].original_name) ?? "Unknown", posterURL: movies[indexPath.row].poster_path ?? ""))
+        guard let cell = myListTableView.dequeueReusableCell(withIdentifier: "TitleTableViewCell", for: indexPath) as? TitleTableViewCell else { return UITableViewCell() }
+        cell.configure(with: TitleView(titleName: (moviesMyList?[indexPath.row].original_title ?? moviesMyList?[indexPath.row].original_name) ?? "Unknown", posterURL: moviesMyList?[indexPath.row].poster_path ?? ""))
+        cell.backgroundColor = .black
         cell.selectionStyle = .none
         return cell
     }
@@ -76,9 +83,11 @@ extension MyListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
         let movieDetailVC = MovieDetailViewController()
-        movieDetailVC.movieId = movies[indexPath.row].id
-            navigationController?.pushViewController(movieDetailVC, animated: true)
+        movieDetailVC.movie = moviesMyList?[indexPath.row]
+        movieDetailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(movieDetailVC, animated: true)
     }
 }
+
+

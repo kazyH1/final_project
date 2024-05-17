@@ -36,7 +36,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableView()
-        
+        navigationItem.title = "Search"
         navigationItem.searchController = searchController
         navigationController?.navigationBar.tintColor = .white
         searchController.searchResultsUpdater = self
@@ -116,16 +116,16 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         //navigate to Detail
         let movieDetailVC = MovieDetailViewController()
-        movieDetailVC.movieId = movies[indexPath.row].id
+        movieDetailVC.movie = movies[indexPath.row]
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
 }
 
 extension SearchViewController: UISearchResultsUpdating, SearchResultsViewControllerDelegate {
-    func searchResultsViewControllerDidItemTap(id: Int) {
+    func searchResultsViewControllerDidItemTap(movie: Movie) {
         //navigate to Detail
         let movieDetailVC = MovieDetailViewController()
-        movieDetailVC.movieId = id
+        movieDetailVC.movie = movie
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
     

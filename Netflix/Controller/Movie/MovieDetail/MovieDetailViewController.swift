@@ -18,8 +18,9 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
     @IBOutlet weak var titleLabel: UILabel!
     
     
-    var movieId: Int?
     var videos: [Video]?
+    var movie: Movie?
+    var moviesMyList: [Movie]?
     var viewModel: MovieDetailViewModel?
     
     private var categoryTabBarController = CategoryTabBarController()
@@ -47,14 +48,15 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         //show back button
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, view.safeAreaInsets.top))
        
-        guard let movieId = movieId else {
-            handleMissingMovieId()
+        guard let movieId = movie?.id else {
+
             return
         }
         
         viewModel?.fetchMovieDetails(movieId: movieId) { [weak self] success in
             guard let strongSelf = self else { return }
             DispatchQueue.main.async {
+                strongSelf.showSpinner(onView: strongSelf.view)
                 if success {
                     if let movieDetails = strongSelf.viewModel?.movieDetails {
                         strongSelf.didFetchMovieDetails(details: movieDetails)
@@ -63,9 +65,12 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
                 } else {
                     strongSelf.handleFetchError()
                 }
+                strongSelf.removeSpinner()
             }
         }
-      
+        
+        moviesMyList = Movie.getMyListMovie() ?? []
+        self.addMyListButton.isHidden = checkMovieExistMyList(movie: self.movie!)
     }
     
     private func configureEpisodesViewController() {
@@ -76,20 +81,32 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
     }
     
     @IBAction func addToMyList(_ sender: Any) {
-        let alertController = UIAlertController(title: "Success", message: "Added this movie to My List successful.", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
+        var message = ""
+        var title = ""
+        var action = "OK"
+        if(!checkMovieExistMyList(movie: self.movie!)){
+            moviesMyList?.append(self.movie!)
+            Movie.saveMyListMovie(movies: moviesMyList ?? [])
+            message = "Added this movie to My List successful."
+            title = "Success"
+            action = "OK"
+            //event to update MyList screen
             self.addMyListButton.isHidden = true
-        }))
+            SwiftEventBus.post("AddToMyList")
+        } else {
+            message = "This movie was added to My List."
+            title = "Movie Exist"
+            action = "Hide"
+        }
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: action, style: .default, handler: nil))
         self.present(alertController, animated: true, completion: nil)
-        navigationItem.backBarButtonItem?.isHidden = true
     }
     
     
     @objc private func handleBackButtonTapped() {
         self.navigationController?.popViewController(animated: true)
     }
-    
-   
     
     @IBAction func playButton(_ sender: UIButton) {
         guard let videos = videos else {
@@ -104,10 +121,6 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         navigationController?.pushViewController(watchingMovieVC, animated: true)
     }
     
-    
-    private func handleMissingMovieId() {
-        print("k có Id ")
-    }
     
     func playVideo(with trailerKey: String) {
         playerView.load(withVideoId: trailerKey, playerVars: ["playsinline" : 1, "showinfo" : 0, "rel" : 0, "controls" : 0, "fs": 0, "autoplay": 1, "autohide": 1, "modestbranding": 1])
@@ -148,6 +161,14 @@ extension MovieDetailViewController: MovieDetailViewModelDelegate {
     
     func onBack(){
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    private func checkMovieExistMyList(movie: Movie) -> Bool{
+        if moviesMyList!.contains(where: {$0.id == movie.id}) {
+            return true
+        } else {
+            return false
+        }
     }
 }
 

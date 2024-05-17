@@ -81,7 +81,7 @@ extension InfoViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let movieDetailVC = MovieDetailViewController()
-        movieDetailVC.movieId = movies[indexPath.row].id
+        movieDetailVC.movie = movies[indexPath.row]
             navigationController?.pushViewController(movieDetailVC, animated: true)
     }
 }
