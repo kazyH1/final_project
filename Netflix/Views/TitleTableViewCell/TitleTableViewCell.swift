@@ -5,32 +5,12 @@ import SDWebImage
 
 class TitleTableViewCell: UITableViewCell {
 
-    static let identifier = "TitleTableViewCell"
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var showImageView: UIImageView!
     
-    private let showImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.clipsToBounds = true
-        return imageView
-    }()
-    
-    private let titleLabel : UILabel = {
-       let title = UILabel()
-        title.translatesAutoresizingMaskIntoConstraints = false
-        return title
-    }()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(showImageView)
-        contentView.addSubview(titleLabel)
-        
-        applyConstraints()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
     }
     
     override func layoutSubviews() {
@@ -42,23 +22,5 @@ class TitleTableViewCell: UITableViewCell {
         guard let url = URL(string: "https://image.tmdb.org/t/p/w500/\(model.posterURL)") else {return}
         showImageView.sd_setImage(with: url, completed: nil)
         titleLabel.text = model.titleName
-        titleLabel.textColor = .white
-    }
-    
-    private func applyConstraints() {
-        let imageConstraints = [
-            showImageView.widthAnchor.constraint(equalToConstant: 100),
-            showImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            showImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            showImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-        ]
-        
-        let titleConstraints = [
-            titleLabel.leadingAnchor.constraint(equalTo: showImageView.trailingAnchor, constant: 20),
-            titleLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
-        ]
-        
-        NSLayoutConstraint.activate(imageConstraints)
-        NSLayoutConstraint.activate(titleConstraints)
     }
 }

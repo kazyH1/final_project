@@ -1,22 +1,23 @@
 //
-//  MyListViewModel.swift
+//  NewAndHotViewModel.swift
 //  Netflix
 //
-//  Created by HuyNguyen on 13/05/2024.
+//  Created by HuyNguyen on 17/05/2024.
 //
 
 import Foundation
-protocol MyListViewModelDelegate: AnyObject {
+
+protocol NewAndHotViewModelDelegate: AnyObject {
     func didFetchMovieDetails(details: MovieDetailResponse)
     func fetchMovieDetailsDidFail(error: Error)
 }
 
-class MyListViewModel {
+class NewAndHotViewModel {
     
     weak var delegate: MovieDetailViewModelDelegate?
     var movieDetails: MovieDetailResponse?
     
-    func fetchMyListMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
+    func fetchUpComingMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
         NetworkManager.shared.fetchMovies(endpoint: "movie/upcoming", completion: completion)
     }
 }

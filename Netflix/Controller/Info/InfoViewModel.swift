@@ -16,7 +16,41 @@ class InfoViewModel {
     weak var delegate: MovieDetailViewModelDelegate?
     var movieDetails: MovieDetailResponse?
     
-    func fetchMyListMovies(completion: @escaping (Result<[Movie], Error>) -> Void) {
-        NetworkManager.shared.fetchMovies(endpoint: "trending/all/day", completion: completion)
+    func fetchMovieDetails(movieId: Int, completion: @escaping (Bool) -> Void) {
+        let urlString = "\(Constants.baseURL)/3/movie/\(movieId)?api_key=\(Constants.APIKey)&append_to_response=videos,credits,recommendations"
+        
+        guard let url = URL(string: urlString) else {
+            completion(false)
+            return
+        }
+        
+        let task = URLSession.shared.dataTask(with: url) { [weak self] (data: Data?, response: URLResponse?, error: Error?) in
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Error fetching movie details: \(error)")
+                completion(false)
+                return
+            }
+            
+            guard let data = data else {
+                print("No data received")
+                completion(false)
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let movieDetails = try decoder.decode(MovieDetailResponse.self, from: data)
+                self.movieDetails = movieDetails
+                completion(true)
+            } catch {
+                print("Error decoding movie details: \(error)")
+                completion(false)
+            }
+        }
+        
+        task.resume()
     }
 }

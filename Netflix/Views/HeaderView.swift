@@ -11,10 +11,10 @@ class HeaderView: UIView {
     
     private let gradientLayer = CAGradientLayer()
     private let infoButton = UIButton()
-    private let addMyListButton = UIButton()
+    let addMyListButton = UIButton()
     
     weak var delegate: HomeHeaderViewDelegate?
-    private var movieId = 0
+    var movie: Movie?
     
     private let playButton: UIButton = {
         let button = UIButton()
@@ -114,7 +114,7 @@ class HeaderView: UIView {
     
     @objc func didTabButton(){
         guard let delegate = delegate else { return }
-        delegate.didTapPlayButton(at: movieId)
+        delegate.didTapPlayButton(movie: self.movie!)
     }
     
     @objc func didTabMyListButton(){
@@ -124,21 +124,25 @@ class HeaderView: UIView {
     
     @objc func didTapInfoButton(){
         guard let delegate = delegate else { return }
-        delegate.didTapInfoButton()
+        delegate.didTapInfoButton(movie: self.movie!)
     }
     
-    public func configure(with posterPath: String?, id: Int) {
-        self.movieId = id
-        if let posterPath = posterPath {
-            guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(posterPath)") else { return }
+    public func configure(movie: Movie) {
+        self.movie = movie
+        print("H: \(String(movie.id ?? 0))")
+        if let posterPath = movie.poster_path {
+            guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(movie.poster_path ?? "")") else { return }
             headerImageView.sd_setImage(with: url, completed: nil)
+        } else {
+            // Xử lý nếu không có poster path
+            // Ví dụ: hiển thị một hình ảnh mặc định hoặc ẩn hình ảnh
         }
     }
 }
 
 protocol HomeHeaderViewDelegate: AnyObject {
-    func didTapPlayButton(at id: Int)
+    func didTapPlayButton(movie: Movie)
     func didTapMyListButton()
-    func didTapInfoButton()
+    func didTapInfoButton(movie: Movie)
 }
 

@@ -42,23 +42,14 @@ extension DisplayViewController {
         viewModel.fetchSlides()
     }
     
-    private func bypassLogin(){
-        let tabBarViewController = TabBarViewController()
-        navigationController?.setViewControllers([tabBarViewController], animated: true)
-        navigationController?.navigationBar.isHidden = true
-    }
-    
     @objc func didTapButton(_ button: UIButton) {
-        bypassLogin()
-        return
-//        let signInVC = SignInViewController()
-//        self.navigationController?.pushViewController(signInVC, animated: true)
+        let signInVC = SignInViewController()
+        self.navigationController?.pushViewController(signInVC, animated: true)
     }
     
     private func configureNavbar() {
         let image = UIImage(named: "netflixLogo")?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: nil, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Sign In", style: .plain, target: self, action: #selector(didTapButton(_:)))
         navigationController?.navigationBar.backgroundColor = .black
         navigationController?.navigationBar.tintColor = .white
     }

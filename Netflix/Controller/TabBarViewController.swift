@@ -25,8 +25,9 @@ class TabBarViewController: UITabBarController {
         let newHotNavi = setupNavigationController(rootViewController: NewAndHotViewController(), tabBarImage: "playStackIcon")
         let searchNavi = setupNavigationController(rootViewController: SearchViewController(), tabBarImage: "searchIcon")
         let fastLaughsNavi = setupNavigationController(rootViewController: FastLaughsViewController(), tabBarImage: "smileIcon")
-        let downloadNavi = setupNavigationController(rootViewController: DownloadViewController(), tabBarImage: "downloadIcon")
-        setViewControllers([homeNavi, newHotNavi, fastLaughsNavi, searchNavi, downloadNavi], animated: true)
+        let myListNavi = setupNavigationController(rootViewController: MyListViewController(), tabBarImage: "List")
+
+        setViewControllers([homeNavi, newHotNavi, fastLaughsNavi, searchNavi, myListNavi], animated: true)
     }
     
     private func setupNavigationController(rootViewController: UIViewController, tabBarImage: String) -> UINavigationController {

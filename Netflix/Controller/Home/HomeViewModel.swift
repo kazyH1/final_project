@@ -30,6 +30,7 @@ class HomeViewModel {
         }
     }
     
+    
     func fetchTrendingMoviePosterPath(completion: @escaping (Result<[Movie], Error>) -> Void) {
         getMovies(for:  "trending/movie/day") { result in
             switch result {
@@ -44,15 +45,6 @@ class HomeViewModel {
             case .failure(let error):
                 completion(.failure(error))
             }
-        }
-    }
-
-    func logOut() {
-        let firebaseAuth = Auth.auth()
-        do {
-            try firebaseAuth.signOut()
-        } catch {
-            print("Đăng xuất không thành công: \(error.localizedDescription)")
         }
     }
 }

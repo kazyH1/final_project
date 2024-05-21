@@ -18,7 +18,7 @@ class MovieDetailViewModel {
     var movieDetails: MovieDetailResponse?
     
     func fetchMovieDetails(movieId: Int, completion: @escaping (Bool) -> Void) {
-        let urlString = "\(Constants.baseURL)/3/movie/\(movieId)?api_key=\(Constants.APIKey)&append_to_response=videos"
+        let urlString = "\(Constants.baseURL)/3/movie/\(movieId)?api_key=\(Constants.APIKey)&append_to_response=videos,credits,recommendations"
         
         guard let url = URL(string: urlString) else {
             completion(false)
@@ -43,7 +43,9 @@ class MovieDetailViewModel {
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
+                //print("Data Str: \(String(describing: String(data: data, encoding: .utf8)))")
                 let movieDetails = try decoder.decode(MovieDetailResponse.self, from: data)
+                
                 self.movieDetails = movieDetails
                 completion(true)
             } catch {

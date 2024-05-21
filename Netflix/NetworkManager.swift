@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 enum APIError: Error {
     case failedToGetData
@@ -16,8 +17,12 @@ class NetworkManager {
     
     private init() {}
     
-    func fetchData<T: Decodable>(from endpoint: String) async throws -> T {
-        guard let url = URL(string: "\(Constants.baseURL)/3/\(endpoint)?api_key=\(Constants.APIKey)") else {
+    func fetchData<T: Decodable>(from endpoint: String, from query: String?) async throws -> T {
+        var querySearch = "";
+        if query != nil {
+            querySearch = "&query=\(query ?? "")"
+        }
+        guard let url = URL(string: "\(Constants.baseURL)/3/\(endpoint)?api_key=\(Constants.APIKey)\(querySearch)") else {
             throw APIError.failedToGetData
         }
         
@@ -34,11 +39,32 @@ class NetworkManager {
     func fetchMovies(endpoint: String, completion: @escaping (Result<[Movie], Error>) -> Void) {
         Task {
             do {
-                let movies: MoviesResponse = try await fetchData(from: endpoint)
+                let movies: MoviesResponse = try await fetchData(from: endpoint, from: "")
                 completion(.success(movies.results))
             } catch {
                 completion(.failure(error))
             }
         }
     }
+    
+    func searchMovies(endpoint: String, query: String?, completion: @escaping (Result<[Movie], Error>) -> Void) {
+        Task {
+            do {
+                let movies: MoviesResponse = try await fetchData(from: endpoint, from: query)
+                completion(.success(movies.results))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func logOut() {
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+        } catch {
+            print("Đăng xuất không thành công: \(error.localizedDescription)")
+        }
+    }
 }
+
