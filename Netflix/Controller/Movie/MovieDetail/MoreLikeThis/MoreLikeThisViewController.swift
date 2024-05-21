@@ -24,7 +24,7 @@ class MoreLikeThisViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupTableView()
+        registerTableView()
         
         SwiftEventBus.onMainThread(self, name: "updateCategoryTab") { result in
             let movieDetails : MovieDetailResponse = result?.object as! MovieDetailResponse
@@ -43,7 +43,7 @@ class MoreLikeThisViewController: UIViewController {
         }
     }
     
-    private func setupTableView() {
+    private func registerTableView() {
         episodesTableView.register(UINib(nibName: "EpisodesTableViewCell", bundle: nil), forCellReuseIdentifier: "EpisodesTableViewCell")
         episodesTableView.backgroundColor = .black
         episodesTableView.delegate = self
@@ -54,6 +54,7 @@ class MoreLikeThisViewController: UIViewController {
 extension MoreLikeThisViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.episodesTableView.setEmptyMessageTop("The list is empty data!", videoFilters.isEmpty)
         return videoFilters.count
     }
     
@@ -77,7 +78,7 @@ extension MoreLikeThisViewController: UITableViewDelegate, UITableViewDataSource
         let video = videoFilters[indexPath.row]
         let posterPath = "https://img.youtube.com/vi/\(video.key)/0.jpg"
         let watchingMovieVC = WatchingMovieViewController()
-        watchingMovieVC.movie = Movie(id: nil, key: video.key, media_type: nil, original_name: nil, original_title: video.name, poster_path: posterPath, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
+        watchingMovieVC.movie = Movie(id: nil, key: video.key, media_type: nil, original_name: nil, original_title: video.name, poster_path: posterPath, backdrop_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
         navigationController?.pushViewController(watchingMovieVC, animated: true)
     }
     

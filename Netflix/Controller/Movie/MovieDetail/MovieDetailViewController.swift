@@ -22,6 +22,8 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
     var movie: Movie?
     var moviesMyList: [Movie]?
     var viewModel: MovieDetailViewModel?
+    private let backButton = UIButton(type: .system)
+    
     
     private var categoryTabBarController = CategoryTabBarController()
     // MARK: - Initializers
@@ -38,6 +40,8 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         super.viewDidLoad()
         viewModel?.delegate = self
         
+        navigationController?.navigationBar.prefersLargeTitles = false
+        
         configureEpisodesViewController()
         
         playerView.delegate = self
@@ -47,7 +51,8 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         
         //show back button
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, view.safeAreaInsets.top))
-       
+        initialSetup()
+        
         guard let movieId = movie?.id else {
 
             return
@@ -71,6 +76,21 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         
         moviesMyList = Movie.getMyListMovie() ?? []
         self.addMyListButton.isHidden = checkMovieExistMyList(movie: self.movie!)
+    }
+    
+    private func initialSetup() {
+        
+        // basic setup
+        view.backgroundColor = .black
+        
+        // button customization
+        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        backButton.setTitle("Back", for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        backButton.titleLabel?.textColor = .white
+        backButton.addTarget(self, action: #selector(handleBackButtonTapped), for: .touchUpInside)
+        let backButtonItem = UIBarButtonItem(customView: backButton)
+        self.navigationItem.leftBarButtonItem = backButtonItem
     }
     
     private func configureEpisodesViewController() {
@@ -103,9 +123,11 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    
     @objc private func handleBackButtonTapped() {
         self.navigationController?.popViewController(animated: true)
+        navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.sizeToFit()
     }
     
     @IBAction func playButton(_ sender: UIButton) {
@@ -117,7 +139,7 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         }
         //navigation to watching screen
         let watchingMovieVC = WatchingMovieViewController()
-        watchingMovieVC.movie = Movie(id: viewModel?.movieDetails?.id, key: clipKey, media_type: nil, original_name: nil, original_title: viewModel?.movieDetails?.title, poster_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
+        watchingMovieVC.movie = Movie(id: viewModel?.movieDetails?.id, key: clipKey, media_type: nil, original_name: nil, original_title: viewModel?.movieDetails?.title, poster_path: nil, backdrop_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
         navigationController?.pushViewController(watchingMovieVC, animated: true)
     }
     

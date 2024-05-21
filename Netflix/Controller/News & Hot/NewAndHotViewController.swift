@@ -8,7 +8,7 @@
 import UIKit
 
 final class NewAndHotViewController: BaseViewController {
-    @IBOutlet weak var UpComingTableView: UITableView!
+    @IBOutlet weak var upComingTableView: UITableView!
     
     private var movies: [Movie] = [Movie]()
     private var viewModel: NewAndHotViewModel?
@@ -35,20 +35,23 @@ final class NewAndHotViewController: BaseViewController {
     
     
     private func registerTableView() {
-        UpComingTableView.dataSource = self
-        UpComingTableView.delegate = self
-        UpComingTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
+        upComingTableView.dataSource = self
+        upComingTableView.delegate = self
+        upComingTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
     }
     
     private func fetchMyList() {
+        self.showSpinner(onView: self.view)
         viewModel?.fetchUpComingMovies() { result in
             switch result {
             case .success(let movie):
+                self.removeSpinner()
                 self.movies = movie
                 DispatchQueue.main.async {
-                    self.UpComingTableView.reloadData()
+                    self.upComingTableView.reloadData()
                 }
             case .failure(let error):
+                self.removeSpinner()
                 print(error.localizedDescription)
             }
             
@@ -59,11 +62,12 @@ final class NewAndHotViewController: BaseViewController {
 
 extension NewAndHotViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        movies.count
+        self.upComingTableView.setEmptyMessage("New & Hot list is empty data!", movies.isEmpty)
+        return movies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = UpComingTableView.dequeueReusableCell(withIdentifier: "TitleTableViewCell", for: indexPath) as? TitleTableViewCell else { return .init() }
+        guard let cell = upComingTableView.dequeueReusableCell(withIdentifier: "TitleTableViewCell", for: indexPath) as? TitleTableViewCell else { return .init() }
         cell.configure(with: TitleView(titleName: (movies[indexPath.row].original_title ?? movies[indexPath.row].original_name) ?? "Unknown", posterURL: movies[indexPath.row].poster_path ?? ""))
         cell.selectionStyle = .none
         return cell

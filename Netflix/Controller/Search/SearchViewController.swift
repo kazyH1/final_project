@@ -30,13 +30,23 @@ class SearchViewController: UIViewController {
         controller.searchBar.searchTextField.backgroundColor = .white
         controller.searchBar.searchTextField.textColor = .white
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes([.foregroundColor : UIColor.white], for: .normal)
+        controller.searchBar.barTintColor = UIColor.black
+        controller.searchBar.tintColor = UIColor.black
+        UIBarButtonItem.appearance().tintColor = UIColor.white
         return controller
     }()
+    
+    override func willMove(toParent parent: UIViewController?) {
+        navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.sizeToFit()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableView()
-        navigationItem.title = "Search"
+        
+        configureNavigation()
         navigationItem.searchController = searchController
         navigationController?.navigationBar.tintColor = .white
         searchController.searchResultsUpdater = self
@@ -53,52 +63,43 @@ class SearchViewController: UIViewController {
 
 extension SearchViewController {
     func configureNavigation() {
+        
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationItem.largeTitleDisplayMode = .always
-        
+        navigationItem.title = "Search"
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
         navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
         navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         navBarAppearance.backgroundColor = .black
         navBarAppearance.shadowColor = nil
-        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.isTranslucent = true
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
     }
     
     private func fetchSearch() {
+        self.showSpinner(onView: self.view)
         viewModel?.fetchSearchMovies() { result in
             switch result {
             case .success(let movie):
+                self.removeSpinner()
                 self.movies = movie
                 DispatchQueue.main.async {
                     self.searchTableView.reloadData()
                 }
             case .failure(let error):
+                self.removeSpinner()
                 print(error.localizedDescription)
             }
             
-        }
-    }
-    
-    func search(with query: String) {
-        viewModel?.search(with: query) { result in
-            switch result {
-            case .success(let movie):
-                self.movies = movie
-                DispatchQueue.main.async {
-                    self.searchTableView.reloadData()
-                }
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
         }
     }
 }
 
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        movies.count
+        self.searchTableView.setEmptyMessage("The list is empty data!", movies.isEmpty)
+        return movies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -126,6 +127,7 @@ extension SearchViewController: UISearchResultsUpdating, SearchResultsViewContro
         //navigate to Detail
         let movieDetailVC = MovieDetailViewController()
         movieDetailVC.movie = movie
+        movieDetailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(movieDetailVC, animated: true)
     }
     

@@ -124,7 +124,7 @@ class HeaderView: UIView {
     
     @objc func didTapInfoButton(){
         guard let delegate = delegate else { return }
-        delegate.didTapInfoButton()
+        delegate.didTapInfoButton(movie: self.movie!)
     }
     
     public func configure(movie: Movie) {
@@ -143,6 +143,6 @@ class HeaderView: UIView {
 protocol HomeHeaderViewDelegate: AnyObject {
     func didTapPlayButton(movie: Movie)
     func didTapMyListButton()
-    func didTapInfoButton()
+    func didTapInfoButton(movie: Movie)
 }
 

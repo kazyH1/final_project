@@ -24,7 +24,7 @@ class TrailersMoreViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupTableView()
+        registerTableView()
         
         SwiftEventBus.onMainThread(self, name: "updateCategoryTab") { result in
             let movieDetails : MovieDetailResponse = result?.object as! MovieDetailResponse
@@ -42,9 +42,8 @@ class TrailersMoreViewController: UIViewController {
         }
     }
     
-    private func setupTableView() {
+    private func registerTableView() {
         episodesTableView.register(UINib(nibName: "EpisodesTableViewCell", bundle: nil), forCellReuseIdentifier: "EpisodesTableViewCell")
-        episodesTableView.backgroundColor = .black
         episodesTableView.delegate = self
         episodesTableView.dataSource = self
     }
@@ -53,6 +52,7 @@ class TrailersMoreViewController: UIViewController {
 extension TrailersMoreViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        self.episodesTableView.setEmptyMessageTop("The list is empty data!", videoFilters.isEmpty)
         return videoFilters.count
     }
     

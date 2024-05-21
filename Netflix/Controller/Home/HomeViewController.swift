@@ -18,7 +18,7 @@ class HomeViewController: BaseViewController {
     private var viewModel: HomeViewModel?
     private var headerView: HeaderView?
     private var randomTrendingMovie: Movie?
-    private let sectionTitles: [String] = ["Trending Movies", "Trending Tv", "Popular", "Upcoming Movies", "Top rated"]
+    private let sectionTitles: [String] = ["Trending Movies", "Popular", "Upcoming Movies", "Top rated"]
     var moviesMyList: [Movie]?
     
     // MARK: - Initializers
@@ -75,8 +75,6 @@ extension HomeViewController {
         switch section {
         case Category.TrendingMovies.rawValue:
             category = "trending/movie/day"
-        case Category.TrendingTv.rawValue:
-            category = "trending/tv/day"
         case Category.Popular.rawValue:
             category = "movie/popular"
         case Category.Upcoming.rawValue:
@@ -169,24 +167,22 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate {
+
     func didTapPlayButton(movie: Movie) {
         pushMovieDetails(movie: movie)
     }
     
     func didTapMyListButton() {
-
-        if(randomTrendingMovie == nil) {
-//            message = "Can't add this movie to My List"
-//            title = "Error"
-//            action = "OK"
-//            let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-//            alertController.addAction(UIAlertAction(title: action, style: .default, handler: nil))
-//            self.present(alertController, animated: true, completion: nil)
-            return
-        }
         var message = ""
         var title = ""
         var action = "OK"
+        if(randomTrendingMovie == nil) {
+            message = "Can't add this movie to My List"
+            title = "Error"
+            action = "OK"
+            return
+        }
+
         if(!checkMovieExistMyList(movie: randomTrendingMovie)){
             moviesMyList!.append(randomTrendingMovie!)
             Movie.saveMyListMovie(movies: moviesMyList ?? [])
@@ -207,9 +203,10 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func didTapInfoButton() {
-        let movieDetailVC = InfoViewController()
-        navigationController?.pushViewController(movieDetailVC, animated: true)
+    func didTapInfoButton(movie: Movie) {
+        let infoVC = InfoViewController()
+        infoVC.movie = movie
+        navigationController?.pushViewController(infoVC, animated: true)
     }
     
     func didSelectMovie(movie: Movie) {

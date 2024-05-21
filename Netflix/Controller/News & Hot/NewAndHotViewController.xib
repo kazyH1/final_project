@@ -9,7 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="NewAndHotViewController" customModule="Netflix" customModuleProvider="target">
             <connections>
-                <outlet property="UpComingTableView" destination="Yaf-zd-akd" id="2jj-cd-9UT"/>
+                <outlet property="upComingTableView" destination="Yaf-zd-akd" id="2jj-cd-9UT"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
