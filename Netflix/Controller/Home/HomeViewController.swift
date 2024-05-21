@@ -190,7 +190,8 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
             title = "Success"
             action = "OK"
             //event to update MyList screen
-            self.headerView?.addMyListButton.isHidden = true
+            self.headerView?.addMyListButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+            self.headerView?.addMyListButton.tintColor = .white
             SwiftEventBus.post("AddToMyList")
         } else {
             message = "This movie was added to My List."
