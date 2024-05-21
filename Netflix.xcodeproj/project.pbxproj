@@ -32,7 +32,6 @@
 		000247832BFC5A5C000D2B8D /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000247822BFC5A5C000D2B8D /* UICollectionView+Extension.swift */; };
 		001055A62BF5FAA300279EC7 /* DeviceOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001055A52BF5FAA200279EC7 /* DeviceOrientation.swift */; };
 		001055A82BF5FB3500279EC7 /* WatchingMovieViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 001055A72BF5FB3500279EC7 /* WatchingMovieViewController.xib */; };
-		00191B7F2BF307F4000CC6AF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 00191B7E2BF307F4000CC6AF /* GoogleService-Info.plist */; };
 		00191B812BF31B20000CC6AF /* WatchingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00191B802BF31B1F000CC6AF /* WatchingViewModel.swift */; };
 		00191B842BF341BF000CC6AF /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00191B822BF341BF000CC6AF /* SearchResultsViewController.swift */; };
 		00191B852BF341BF000CC6AF /* SearchResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00191B832BF341BF000CC6AF /* SearchResultsViewController.xib */; };
@@ -40,6 +39,7 @@
 		00191B8D2BF34938000CC6AF /* TitlePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00191B8C2BF34937000CC6AF /* TitlePreview.swift */; };
 		005686582BF1EF8300D9B615 /* MyListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 005686562BF1EF8300D9B615 /* MyListViewController.xib */; };
 		0056865C2BF1F17900D9B615 /* InfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0056865A2BF1F17900D9B615 /* InfoViewController.xib */; };
+		00A30FBD2BFC9A3C008D4B74 /* GoogleService-Info .plist in Resources */ = {isa = PBXBuildFile; fileRef = 00A30FBC2BFC9A3C008D4B74 /* GoogleService-Info .plist */; };
 		00B8F7302BECDB5900839C2F /* MovieDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00B8F72F2BECDB5800839C2F /* MovieDetailViewController.xib */; };
 		00C6CD8A2BF5EC6E0020376D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84826AC82BC7C2D300E115C2 /* Assets.xcassets */; };
 		00C785782BED139200D0E041 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C785772BED139100D0E041 /* BaseViewController.swift */; };
@@ -161,7 +161,6 @@
 		000247822BFC5A5C000D2B8D /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
 		001055A52BF5FAA200279EC7 /* DeviceOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceOrientation.swift; sourceTree = "<group>"; };
 		001055A72BF5FB3500279EC7 /* WatchingMovieViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WatchingMovieViewController.xib; sourceTree = "<group>"; };
-		00191B7E2BF307F4000CC6AF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		00191B802BF31B1F000CC6AF /* WatchingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchingViewModel.swift; sourceTree = "<group>"; };
 		00191B822BF341BF000CC6AF /* SearchResultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		00191B832BF341BF000CC6AF /* SearchResultsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchResultsViewController.xib; sourceTree = "<group>"; };
@@ -169,6 +168,7 @@
 		00191B8C2BF34937000CC6AF /* TitlePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlePreview.swift; sourceTree = "<group>"; };
 		005686562BF1EF8300D9B615 /* MyListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyListViewController.xib; sourceTree = "<group>"; };
 		0056865A2BF1F17900D9B615 /* InfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoViewController.xib; sourceTree = "<group>"; };
+		00A30FBC2BFC9A3C008D4B74 /* GoogleService-Info .plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info .plist"; path = "../../Downloads/GoogleService-Info .plist"; sourceTree = "<group>"; };
 		00B8F72F2BECDB5800839C2F /* MovieDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieDetailViewController.xib; sourceTree = "<group>"; };
 		00C785772BED139100D0E041 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		00EF116A2BF6EDF3008428D3 /* NewAndHotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAndHotViewModel.swift; sourceTree = "<group>"; };
@@ -541,7 +541,7 @@
 				84826AC82BC7C2D300E115C2 /* Assets.xcassets */,
 				84A362962BCFD85700D5078A /* AppDelegate */,
 				84826ACA2BC7C2D300E115C2 /* LaunchScreen.storyboard */,
-				00191B7E2BF307F4000CC6AF /* GoogleService-Info.plist */,
+				00A30FBC2BFC9A3C008D4B74 /* GoogleService-Info .plist */,
 				84826ACD2BC7C2D300E115C2 /* Info.plist */,
 				84826AD52BC7C2D300E115C2 /* NetflixTests */,
 			);
@@ -856,7 +856,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				84CCF2722BEB46D900C45FF3 /* HeaderInSectionView.xib in Resources */,
-				00191B7F2BF307F4000CC6AF /* GoogleService-Info.plist in Resources */,
 				84E7DCB52BC8D63700B4674D /* MovieCollectionViewCell.xib in Resources */,
 				BA8D5B882BF0081B00FED534 /* CollectionTableViewCell.xib in Resources */,
 				846861782BDF461F00BC9490 /* DisplayViewController.xib in Resources */,
@@ -870,6 +869,7 @@
 				846861522BDF419B00BC9490 /* FastLaughsViewController.xib in Resources */,
 				84A3627F2BCF831300D5078A /* HomeViewController.xib in Resources */,
 				005686582BF1EF8300D9B615 /* MyListViewController.xib in Resources */,
+				00A30FBD2BFC9A3C008D4B74 /* GoogleService-Info .plist in Resources */,
 				84826ACC2BC7C2D300E115C2 /* Base in Resources */,
 				84CCF2822BEB6B8A00C45FF3 /* EpisodesTableViewCell.xib in Resources */,
 				0056865C2BF1F17900D9B615 /* InfoViewController.xib in Resources */,
