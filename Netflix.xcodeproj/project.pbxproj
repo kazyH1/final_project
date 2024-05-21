@@ -39,7 +39,7 @@
 		00191B8D2BF34938000CC6AF /* TitlePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00191B8C2BF34937000CC6AF /* TitlePreview.swift */; };
 		005686582BF1EF8300D9B615 /* MyListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 005686562BF1EF8300D9B615 /* MyListViewController.xib */; };
 		0056865C2BF1F17900D9B615 /* InfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0056865A2BF1F17900D9B615 /* InfoViewController.xib */; };
-		00A30FBD2BFC9A3C008D4B74 /* GoogleService-Info .plist in Resources */ = {isa = PBXBuildFile; fileRef = 00A30FBC2BFC9A3C008D4B74 /* GoogleService-Info .plist */; };
+		00A30FC12BFCA1BE008D4B74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 00A30FC02BFCA1BD008D4B74 /* GoogleService-Info.plist */; };
 		00B8F7302BECDB5900839C2F /* MovieDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00B8F72F2BECDB5800839C2F /* MovieDetailViewController.xib */; };
 		00C6CD8A2BF5EC6E0020376D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84826AC82BC7C2D300E115C2 /* Assets.xcassets */; };
 		00C785782BED139200D0E041 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C785772BED139100D0E041 /* BaseViewController.swift */; };
@@ -168,7 +168,7 @@
 		00191B8C2BF34937000CC6AF /* TitlePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitlePreview.swift; sourceTree = "<group>"; };
 		005686562BF1EF8300D9B615 /* MyListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyListViewController.xib; sourceTree = "<group>"; };
 		0056865A2BF1F17900D9B615 /* InfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = InfoViewController.xib; sourceTree = "<group>"; };
-		00A30FBC2BFC9A3C008D4B74 /* GoogleService-Info .plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info .plist"; path = "../../Downloads/GoogleService-Info .plist"; sourceTree = "<group>"; };
+		00A30FC02BFCA1BD008D4B74 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		00B8F72F2BECDB5800839C2F /* MovieDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieDetailViewController.xib; sourceTree = "<group>"; };
 		00C785772BED139100D0E041 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		00EF116A2BF6EDF3008428D3 /* NewAndHotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAndHotViewModel.swift; sourceTree = "<group>"; };
@@ -541,7 +541,7 @@
 				84826AC82BC7C2D300E115C2 /* Assets.xcassets */,
 				84A362962BCFD85700D5078A /* AppDelegate */,
 				84826ACA2BC7C2D300E115C2 /* LaunchScreen.storyboard */,
-				00A30FBC2BFC9A3C008D4B74 /* GoogleService-Info .plist */,
+				00A30FC02BFCA1BD008D4B74 /* GoogleService-Info.plist */,
 				84826ACD2BC7C2D300E115C2 /* Info.plist */,
 				84826AD52BC7C2D300E115C2 /* NetflixTests */,
 			);
@@ -868,8 +868,8 @@
 				846861442BDF3F7200BC9490 /* NewAndHotViewController.xib in Resources */,
 				846861522BDF419B00BC9490 /* FastLaughsViewController.xib in Resources */,
 				84A3627F2BCF831300D5078A /* HomeViewController.xib in Resources */,
+				00A30FC12BFCA1BE008D4B74 /* GoogleService-Info.plist in Resources */,
 				005686582BF1EF8300D9B615 /* MyListViewController.xib in Resources */,
-				00A30FBD2BFC9A3C008D4B74 /* GoogleService-Info .plist in Resources */,
 				84826ACC2BC7C2D300E115C2 /* Base in Resources */,
 				84CCF2822BEB6B8A00C45FF3 /* EpisodesTableViewCell.xib in Resources */,
 				0056865C2BF1F17900D9B615 /* InfoViewController.xib in Resources */,
