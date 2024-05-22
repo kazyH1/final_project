@@ -77,5 +77,7 @@ class DetailRecomendViewCell: UICollectionViewCell {
             ),
             into: self.imgBg
         )
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w300/\(String(describing: viewModel.poster_path))") else {return}
+        self.imgBg.sd_setImage(with: url,placeholderImage: UIImage(named: "imagePlaceholder"), completed: nil)
     }
 }

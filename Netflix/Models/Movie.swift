@@ -14,8 +14,8 @@ struct MoviesResponse: Codable {
 
 public struct Recommendation: Codable {
     let page: Int
-    let totalResults: Int
-    let totalPages: Int
+    let total_results: Int
+    let total_pages: Int
     let results: [Movie]
 }
 
@@ -28,10 +28,10 @@ public struct CastResponse: Codable {
 }
 
 public struct MovieCast: Codable {
-     let name: String
-     let character: String
-     let profile_path: String?
-     var profileURL: URL {
+    let name: String
+    let character: String
+    let profile_path: String?
+    var profileURL: URL {
         return URL(string: "https://image.tmdb.org/t/p/w300\(profile_path ?? "")")!
     }
 }
@@ -49,21 +49,21 @@ struct Movie: Codable {
     let release_date: String?
     let vote_average: Double?
     
-     var posterURL: URL {
+    var posterURL: URL {
         return URL(string: "https://image.tmdb.org/t/p/w300\(poster_path ?? "")")!
     }
     
-     var backdropURL: URL {
+    var backdropURL: URL {
         return URL(string: "https://image.tmdb.org/t/p/w500\(backdrop_path ?? "")")!
     }
     
     
-     static func saveMyListMovie(movies: [Movie]){
+    static func saveMyListMovie(movies: [Movie]){
         let moviesData = try! JSONEncoder().encode(movies)
         UserDefaults.standard.set(moviesData, forKey: "mylist")
     }
     
-     static func getMyListMovie() -> [Movie]?{
+    static func getMyListMovie() -> [Movie]?{
         let moviesData = UserDefaults.standard.data(forKey: "mylist")
         if(moviesData == nil){
             return []
@@ -72,9 +72,4 @@ struct Movie: Codable {
             return movies
         }
     }
-    
 }
-
-
-
-

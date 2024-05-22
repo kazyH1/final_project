@@ -16,6 +16,7 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
     @IBOutlet weak var detailView: UIView!
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
+  
     
     
     var videos: [Video]?
@@ -76,6 +77,12 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         
         moviesMyList = Movie.getMyListMovie() ?? []
         self.addMyListButton.isHidden = checkMovieExistMyList(movie: self.movie!)
+    }
+    
+    @IBAction func infoButton(_ sender: UIButton) {
+        let infoVC = InfoViewController()
+        infoVC.movie = movie
+        navigationController?.pushViewController(infoVC, animated: true)
     }
     
     private func initialSetup() {

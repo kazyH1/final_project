@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 class InfoViewController: BaseViewController {
     
-    private var collectionView: UICollectionView!
+    @IBOutlet weak var infoCollectionView: UICollectionView!
     var heightLabelReadMore : CGFloat = 120.0
     var movie: Movie?
     private var viewModel: InfoViewModel?
@@ -29,7 +29,7 @@ class InfoViewController: BaseViewController {
         getDetailMovie()
         configureNavbar()
         navigationItem.leftBarButtonItems  = [UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .done, target: self, action: #selector(backAction)),
-            UIBarButtonItem(image: UIImage(named: "netflixLogo"), style: .done, target: self, action: nil)
+                                              UIBarButtonItem(image: UIImage(named: "netflixLogo"), style: .done, target: self, action: nil)
         ]
     }
     
@@ -41,54 +41,48 @@ class InfoViewController: BaseViewController {
         
         viewModel?.fetchMovieDetails(movieId: movie?.id ?? 0) { [weak self] success in
             guard let strongSelf = self else { return }
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
                 strongSelf.showSpinner(onView: strongSelf.view)
                 if success {
                     if (strongSelf.viewModel?.movieDetails) != nil {
-                        strongSelf.collectionView.reloadData()
+                        strongSelf.infoCollectionView.reloadData()
                     }
                 } else {
-                    DispatchQueue.main.async {
-                        let alertController = UIAlertController(title: "Error", message: "Failed to fetch movie details. Please try again later.", preferredStyle: .alert)
-                        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
-                            strongSelf.backAction()
-                        }))
-                        strongSelf.present(alertController, animated: true, completion: nil)
-                    }
+                    strongSelf.alertHandelError()
                 }
                 strongSelf.removeSpinner()
             }
         }
     }
     
-    
+    private func alertHandelError(){
+        let alertController = UIAlertController(title: "Error", message: "Failed to fetch movie details. Please try again later.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: {(action:UIAlertAction!) in
+            self.backAction()
+        }))
+        self.present(alertController, animated: true, completion: nil)
+    }
     private func setupLayout() {
         self.view.backgroundColor = .black
         self.createCollectionView()
     }
     
     private func createCollectionView() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .vertical
-        self.collectionView = UICollectionView(frame: self.view.frame, collectionViewLayout: layout)
-        self.collectionView.showsVerticalScrollIndicator = false
-        self.collectionView.backgroundColor = .white
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-        self.collectionView.contentInsetAdjustmentBehavior = .never
-        self.view.addSubview(self.collectionView)
-        self.collectionView.snp.makeConstraints {
+        self.infoCollectionView.delegate = self
+        self.infoCollectionView.dataSource = self
+        self.infoCollectionView.contentInsetAdjustmentBehavior = .never
+        self.infoCollectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        self.collectionView.bounces = false
-        self.collectionView.alwaysBounceVertical = false
-        self.collectionView.register(DetailSeriesCastCollectionCell.self, self.collectionView)
-        self.collectionView.register(DetailVideoCollectionCell.self, self.collectionView)
-        self.collectionView.register(DetailCommentCollectionCell.self, self.collectionView)
-        self.collectionView.register(DetailRecomendCollectionCell.self, self.collectionView)
-        self.collectionView.registerHeader(DetailHeaderSection.self, self.collectionView)
-        self.collectionView.registerHeader(DetailHeaderTitle.self, self.collectionView)
-        self.collectionView.backgroundColor = .black
+        self.infoCollectionView.bounces = false
+        self.infoCollectionView.alwaysBounceVertical = false
+        self.infoCollectionView.register(DetailSeriesCastCollectionCell.self, self.infoCollectionView)
+        self.infoCollectionView.register(DetailVideoCollectionCell.self, self.infoCollectionView)
+        self.infoCollectionView.register(DetailCommentCollectionCell.self, self.infoCollectionView)
+        self.infoCollectionView.register(DetailRecomendCollectionCell.self, self.infoCollectionView)
+        self.infoCollectionView.registerHeader(DetailHeaderSection.self, self.infoCollectionView)
+        self.infoCollectionView.registerHeader(DetailHeaderTitle.self, self.infoCollectionView)
+        self.infoCollectionView.backgroundColor = .black
     }
     
     @objc private func backAction() {
@@ -126,13 +120,7 @@ extension InfoViewController: UICollectionViewDataSource {
             cell.backgroundColor = .black
             return cell
         }
-//        if indexPath.section == DetailSection.comment {
-//            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: DetailCommentCollectionCell.self), for: indexPath) as? DetailCommentCollectionCell else {
-//                fatalError()
-//            }
-//            cell.backgroundColor = .black
-//            return cell
-//        }
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: DetailRecomendCollectionCell.self), for: indexPath) as? DetailRecomendCollectionCell else {
             fatalError()
         }
@@ -142,7 +130,7 @@ extension InfoViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-       
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -151,7 +139,7 @@ extension InfoViewController: UICollectionViewDataSource {
         case UICollectionView.elementKindSectionHeader:
             if indexPath.section == DetailSection.info {
                 guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: String(describing: DetailHeaderSection.self), for: indexPath) as? DetailHeaderSection else {
-                        fatalError("Invalid view type")
+                    fatalError("Invalid view type")
                 }
                 headerView.backgroundColor = .black
                 headerView.configure(movieDetail: self.viewModel?.movieDetails)
@@ -160,7 +148,7 @@ extension InfoViewController: UICollectionViewDataSource {
                 return headerView
             }
             guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: String(describing: DetailHeaderTitle.self), for: indexPath) as? DetailHeaderTitle else {
-                    fatalError("Invalid view type")
+                fatalError("Invalid view type")
             }
             headerView.btnMore.isHidden = true
             headerView.backgroundColor = UIColor("#292929")
@@ -171,10 +159,6 @@ extension InfoViewController: UICollectionViewDataSource {
             else if indexPath.section == DetailSection.video {
                 headerView.title.text = str_detail_section_video
             }
-//            else if indexPath.section == DetailSection.comment {
-//                headerView.title.text = str_detail_section_comment
-//                headerView.btnMore.isHidden = false
-//            }
             else if indexPath.section == DetailSection.recommend {
                 headerView.title.text = str_detail_section_recomend
                 headerView.moreButton = {
@@ -200,9 +184,9 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout {
         if indexPath.section == DetailSection.video {
             return CGSize(width: fullWidth, height: 165)
         }
-//        if indexPath.section == DetailSection.comment {
-//            return CGSize(width: fullWidth, height: 145*3)
-//        }
+        //        if indexPath.section == DetailSection.comment {
+        //            return CGSize(width: fullWidth, height: 145*3)
+        //        }
         if indexPath.section == DetailSection.recommend {
             return CGSize(width: fullWidth, height: 250)
         }
@@ -216,7 +200,7 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if section == DetailSection.info {
             return CGSize(width: fullWidth, height: 310 + heightLabelReadMore + 170)
@@ -226,11 +210,18 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension InfoViewController : DetailHeaderSectionDelegate {
+extension InfoViewController : DetailHeaderSectionDelegate, DetailVideoCellDelegate {
+    func didSelectMovie(video: Video, posterPath: String) {
+        let watchingMovieVC = WatchingMovieViewController()
+        watchingMovieVC.movie = Movie(id: nil, key: video.key, media_type: nil, original_name: nil, original_title: video.name, poster_path: posterPath, backdrop_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
+        navigationController?.pushViewController(watchingMovieVC, animated: true)
+    }
+    
     func didPressReadMore(sender: DetailHeaderSection, height: CGFloat) {
         self.heightLabelReadMore = height
-        self.collectionView.performBatchUpdates({
-            self.collectionView.reloadData()
+        self.infoCollectionView.performBatchUpdates({
+            self.infoCollectionView.reloadData()
         }, completion: nil)
     }
+    
 }

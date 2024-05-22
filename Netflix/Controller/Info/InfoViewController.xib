@@ -4,12 +4,12 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InfoViewController" customModule="Netflix" customModuleProvider="target">
             <connections>
+                <outlet property="infoCollectionView" destination="aLW-m4-Bqh" id="KRz-Cx-NaG"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="5Ae-Lz-Fu6"/>
             </connections>
         </placeholder>
@@ -18,10 +18,9 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="aLW-m4-Bqh">
-                    <rect key="frame" x="66" y="305" width="240" height="128"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="aLW-m4-Bqh">
+                    <rect key="frame" x="0.0" y="59" width="393" height="759"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="znG-m9-u07">
                         <size key="itemSize" width="128" height="128"/>
                         <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -32,12 +31,13 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="aLW-m4-Bqh" secondAttribute="bottom" id="Abd-q4-6jf"/>
+                <constraint firstItem="aLW-m4-Bqh" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="BFs-Dd-BMC"/>
+                <constraint firstItem="aLW-m4-Bqh" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="FCk-sd-Ur0"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="aLW-m4-Bqh" secondAttribute="trailing" id="TcJ-qd-33X"/>
+            </constraints>
             <point key="canvasLocation" x="102" y="20"/>
         </view>
     </objects>
-    <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>

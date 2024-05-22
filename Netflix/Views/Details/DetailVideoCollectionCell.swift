@@ -5,10 +5,15 @@
 import Foundation
 import UIKit
 import AVKit
+protocol DetailVideoCellDelegate: AnyObject {
+    func didSelectMovie(video: Video, posterPath: String)
+}
+
 
 class DetailVideoCollectionCell: BaseCollectionCell {
     
     var arrVideos = [Video]()
+    weak var delegate: DetailVideoCellDelegate?
     
     override func sizeCollection() -> CGSize {
         return size_detail_video
@@ -23,7 +28,7 @@ class DetailVideoCollectionCell: BaseCollectionCell {
     
 }
 
-extension DetailVideoCollectionCell: UICollectionViewDataSource {
+extension DetailVideoCollectionCell: UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.arrVideos.count
@@ -40,13 +45,9 @@ extension DetailVideoCollectionCell: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let video = self.arrVideos[indexPath.row]
-        
         let posterPath = "https://img.youtube.com/vi/\(video.key)/0.jpg"
-        let watchingMovieVC = WatchingMovieViewController()
-        watchingMovieVC.movie = Movie(id: nil, key: video.key, media_type: nil, original_name: nil, original_title: video.name, poster_path: posterPath, backdrop_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
-        UIViewController().navigationController?.pushViewController(watchingMovieVC, animated: true)
+        delegate?.didSelectMovie(video: video, posterPath: posterPath)
     }
-    
 }
 
 extension DetailVideoCollectionCell: UICollectionViewDelegateFlowLayout {
