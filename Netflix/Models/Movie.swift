@@ -14,8 +14,8 @@ struct MoviesResponse: Codable {
 
 public struct Recommendation: Codable {
     let page: Int
-    let total_results: Int
-    let total_pages: Int
+    let total_results: Int?
+    let total_pages: Int?
     let results: [Movie]
 }
 

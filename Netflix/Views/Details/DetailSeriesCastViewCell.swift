@@ -92,7 +92,7 @@ class DetailSeriesCastViewCell: UICollectionViewCell {
 //            ),
 //            into: self.imgBg
 //        )
-        guard let url = URL(string: "https://image.tmdb.org/t/p/w500/\(viewModel.profile_path)") else {return}
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w300/\(viewModel.profile_path ?? "")") else {return}
         self.imgBg.sd_setImage(with: url,placeholderImage: UIImage(named: "imagePlaceholder"), completed: nil)
         self.title.text = viewModel.name
         self.desc.text = viewModel.character

@@ -70,14 +70,7 @@ class DetailRecomendViewCell: UICollectionViewCell {
 
     func configure(viewModel: Movie) {
         self.title.text = viewModel.original_title
-        Nuke.loadImage(
-            with: viewModel.posterURL,
-            options: ImageLoadingOptions(
-                transition: .fadeIn(duration: 0.33)
-            ),
-            into: self.imgBg
-        )
-        guard let url = URL(string: "https://image.tmdb.org/t/p/w300/\(String(describing: viewModel.poster_path))") else {return}
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w300/\(viewModel.poster_path ?? "")") else {return}
         self.imgBg.sd_setImage(with: url,placeholderImage: UIImage(named: "imagePlaceholder"), completed: nil)
     }
 }

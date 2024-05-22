@@ -251,10 +251,10 @@ class DetailHeaderSection: UICollectionReusableView {
 //            into: self.imgAvatar
 //        )
         
-        guard let url = URL(string: "https://image.tmdb.org/t/p/w500/\(movieDetail?.backdrop_path)") else {return}
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w300/\(movieDetail?.backdrop_path ?? "")") else {return}
         self.imgBgTop.sd_setImage(with: url,placeholderImage: UIImage(named: "detail_mockup_video"), completed: nil)
         
-        guard let url = URL(string: "https://image.tmdb.org/t/p/w300/\(movieDetail?.poster_path)") else {return}
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w300/\(movieDetail?.poster_path ?? "")") else {return}
         self.imgAvatar.sd_setImage(with: url,placeholderImage: UIImage(named: "imagePlaceholder"), completed: nil)
         
         self.desc.text = movieDetail?.overview

@@ -654,9 +654,9 @@
 				0002476C2BFC5736000D2B8D /* Sections */,
 				000247692BFC56D2000D2B8D /* Base */,
 				BABA07E82BF18F70008319A1 /* TitleTableViewCell */,
+				84A3627A2BCF6CF200D5078A /* HomeTableViewCell */,
 				BA8D5B7E2BEFFCA900FED534 /* CollectionTableViewCell */,
 				84CCF27E2BEB6B6200C45FF3 /* EpisodesTableViewCell */,
-				84A3627A2BCF6CF200D5078A /* HomeTableViewCell */,
 				84A362792BCF6CD400D5078A /* MovieCollectionViewCell */,
 				84E7DCBF2BC8F91C00B4674D /* HeaderView.swift */,
 			);
