@@ -31,9 +31,16 @@ class HomeViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        checkMovieExistMyList(movie: randomTrendingMovie)
+    }
+    
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.headerView?.addMyListButton.isHidden = false
         
         setupTableView()
         configureNavbar()
@@ -41,7 +48,7 @@ class HomeViewController: BaseViewController {
         moviesMyList = Movie.getMyListMovie() ?? []
         // Configure header view
         getMovieForTableHeaderView()
-        self.headerView?.addMyListButton.isHidden = checkMovieExistMyList(movie: randomTrendingMovie)
+        checkMovieExistMyList(movie: randomTrendingMovie)
     }
     
 }
@@ -226,6 +233,7 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
             return false
         }
         if moviesMyList!.contains(where: {$0.id == movie!.id}) {
+            self.headerView?.addMyListButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
             return true
         } else {
             return false

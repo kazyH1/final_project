@@ -34,11 +34,10 @@ class InfoViewController: BaseViewController {
     }
     
     // MARK: API
-    private func getDetailMovie() {
+    private func getDetailMovie()  {
         guard (movie?.id) != nil else {
             return
         }
-        
         viewModel?.fetchMovieDetails(movieId: movie?.id ?? 0) { [weak self] success in
             guard let strongSelf = self else { return }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
@@ -54,6 +53,7 @@ class InfoViewController: BaseViewController {
             }
         }
     }
+    
     
     private func alertHandelError(){
         let alertController = UIAlertController(title: "Error", message: "Failed to fetch movie details. Please try again later.", preferredStyle: .alert)
@@ -111,27 +111,25 @@ extension InfoViewController: UICollectionViewDataSource {
             cell.backgroundColor = .black
             cell.arrCasts = self.viewModel?.movieDetails?.movieCast ?? []
             return cell
-        }
-        if indexPath.section == DetailSection.video {
+        } else if indexPath.section == DetailSection.video {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: DetailVideoCollectionCell.self), for: indexPath) as? DetailVideoCollectionCell else {
                 fatalError()
             }
-            cell.arrVideos = self.viewModel?.movieDetails?.videos.results ?? []
             cell.backgroundColor = .black
+            cell.arrVideos = self.viewModel?.movieDetails?.videos.results ?? []
+            cell.delegate = self
+            return cell
+        } else {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: DetailRecomendCollectionCell.self), for: indexPath) as? DetailRecomendCollectionCell else {
+                fatalError()
+            }
+            cell.backgroundColor = .black
+            cell.arr = self.viewModel?.movieDetails?.recommendations?.results ?? []
+            cell.delegate = self
             return cell
         }
-        
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: DetailRecomendCollectionCell.self), for: indexPath) as? DetailRecomendCollectionCell else {
-            fatalError()
-        }
-        cell.backgroundColor = .black
-        cell.arr = self.viewModel?.movieDetails?.recommendations?.results ?? []
-        return cell
     }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-    }
+
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
@@ -184,9 +182,7 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout {
         if indexPath.section == DetailSection.video {
             return CGSize(width: fullWidth, height: 165)
         }
-        //        if indexPath.section == DetailSection.comment {
-        //            return CGSize(width: fullWidth, height: 145*3)
-        //        }
+        
         if indexPath.section == DetailSection.recommend {
             return CGSize(width: fullWidth, height: 250)
         }
@@ -210,10 +206,18 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension InfoViewController : DetailHeaderSectionDelegate, DetailVideoCellDelegate {
+extension InfoViewController : DetailHeaderSectionDelegate, DetailVideoCellDelegate, DetailRecommendViewDelegate {
+    func didSelectMovie(movie: Movie) {
+        let movieDetailVC = MovieDetailViewController()
+        movieDetailVC.movie = movie
+        movieDetailVC.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
+    
     func didSelectMovie(video: Video, posterPath: String) {
         let watchingMovieVC = WatchingMovieViewController()
-        watchingMovieVC.movie = Movie(id: nil, key: video.key, media_type: nil, original_name: nil, original_title: video.name, poster_path: posterPath, backdrop_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
+        watchingMovieVC.movie = Movie(id: nil, key: video.key, media_type: nil, original_name: nil, original_title: video.name, poster_path: nil, backdrop_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 100)
+        watchingMovieVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(watchingMovieVC, animated: true)
     }
     

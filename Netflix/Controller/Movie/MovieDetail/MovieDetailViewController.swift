@@ -11,12 +11,13 @@ import youtube_ios_player_helper
 import SwiftEventBus
 
 class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
+    @IBOutlet weak var scrollContentView: UIView!
     @IBOutlet weak var addMyListButton: UIButton!
     @IBOutlet weak var playerView: YTPlayerView!
     @IBOutlet weak var detailView: UIView!
     @IBOutlet weak var overviewLabel: UILabel!
     @IBOutlet weak var titleLabel: UILabel!
-  
+    @IBOutlet weak var scrollView: UIScrollView!
     
     
     var videos: [Video]?
@@ -24,6 +25,7 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
     var moviesMyList: [Movie]?
     var viewModel: MovieDetailViewModel?
     private let backButton = UIButton(type: .system)
+
     
     
     private var categoryTabBarController = CategoryTabBarController()
@@ -40,9 +42,9 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel?.delegate = self
-        
+        scrollView.delegate = self
         navigationController?.navigationBar.prefersLargeTitles = false
-        
+        scrollView.contentOffset.x = 0
         configureEpisodesViewController()
         
         playerView.delegate = self
@@ -85,28 +87,6 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         navigationController?.pushViewController(infoVC, animated: true)
     }
     
-    private func initialSetup() {
-        
-        // basic setup
-        view.backgroundColor = .black
-        
-        // button customization
-        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
-        backButton.setTitle("Back", for: .normal)
-        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-        backButton.titleLabel?.textColor = .white
-        backButton.addTarget(self, action: #selector(handleBackButtonTapped), for: .touchUpInside)
-        let backButtonItem = UIBarButtonItem(customView: backButton)
-        self.navigationItem.leftBarButtonItem = backButtonItem
-    }
-    
-    private func configureEpisodesViewController() {
-        detailView.addSubview(categoryTabBarController.view)
-        categoryTabBarController.view.frame = detailView.bounds
-        addChild(categoryTabBarController)
-        categoryTabBarController.didMove(toParent: self)
-    }
-    
     @IBAction func addToMyList(_ sender: Any) {
         var message = ""
         var title = ""
@@ -130,18 +110,14 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    @objc private func handleBackButtonTapped() {
-        self.navigationController?.popViewController(animated: true)
-        navigationItem.largeTitleDisplayMode = .always
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.sizeToFit()
-    }
-    
     @IBAction func playButton(_ sender: UIButton) {
         guard let videos = videos else {
             return
         }
         guard let clipKey = videos.first(where: { $0.type == "Clip" })?.key else {
+            let alertController = UIAlertController(title: "Notification", message: "There are currently no clips from this movie", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Hide", style: .default, handler: nil))
+            self.present(alertController, animated: true, completion: nil)
             return
         }
         //navigation to watching screen
@@ -150,6 +126,34 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         navigationController?.pushViewController(watchingMovieVC, animated: true)
     }
     
+    private func initialSetup() {
+        
+        // basic setup
+        view.backgroundColor = .black
+        
+        // button customization
+        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        backButton.setTitle("Back", for: .normal)
+        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        backButton.titleLabel?.textColor = .white
+        backButton.addTarget(self, action: #selector(handleBackButtonTapped), for: .touchUpInside)
+        let backButtonItem = UIBarButtonItem(customView: backButton)
+        self.navigationItem.leftBarButtonItem = backButtonItem
+    }
+    
+    private func configureEpisodesViewController() {
+        detailView.addSubview(categoryTabBarController.view)
+        categoryTabBarController.view.frame = detailView.bounds
+        addChild(categoryTabBarController)
+        categoryTabBarController.didMove(toParent: self)
+    }
+    
+    @objc private func handleBackButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+        navigationItem.largeTitleDisplayMode = .always
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.sizeToFit()
+    }
     
     func playVideo(with trailerKey: String) {
         playerView.load(withVideoId: trailerKey, playerVars: ["playsinline" : 1, "showinfo" : 0, "rel" : 0, "controls" : 0, "fs": 0, "autoplay": 1, "autohide": 1, "modestbranding": 1])
@@ -199,5 +203,8 @@ extension MovieDetailViewController: MovieDetailViewModelDelegate {
             return false
         }
     }
+}
+
+extension MovieDetailViewController: UIScrollViewDelegate {
 }
 

@@ -7,6 +7,7 @@ import UIKit
 import SnapKit
 import Nuke
 
+
 class DetailRecomendViewCell: UICollectionViewCell {
     
     private lazy var viewBg: UIView = {

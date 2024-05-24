@@ -37,15 +37,9 @@ class InfoViewModel {
                 completion(false)
                 return
             }
-
-            // Log raw JSON data for debugging
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("JSON Response: \(jsonString)")
-            }
-
+            
             do {
                 let decoder = JSONDecoder()
-//                decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let movieDetails = try decoder.decode(MovieDetailResponse.self, from: data)
                 print(movieDetails)
                 self.movieDetails = movieDetails

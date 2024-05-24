@@ -86,12 +86,12 @@ class DetailHeaderSection: UICollectionReusableView {
     
     private lazy var cosmosView: CosmosView = {
         let cosmosView = CosmosView()
-        cosmosView.settings.fillMode = .full
-        cosmosView.settings.starSize = 15
-        cosmosView.settings.starMargin = 10
+//        cosmosView.settings.fillMode = .full
+//        cosmosView.settings.starSize = 15
+//        cosmosView.settings.starMargin = 10
         cosmosView.rating = 4
-        cosmosView.settings.emptyImage = UIImage(named: image_detail_ic_star_empty)
-        cosmosView.settings.filledImage = UIImage(named: image_detail_ic_star_full)
+//        cosmosView.settings.emptyImage = UIImage(named: image_detail_ic_star_empty)
+//        cosmosView.settings.filledImage = UIImage(named: image_detail_ic_star_full)
         self.addSubview(cosmosView)
         return cosmosView
     }()
@@ -235,22 +235,6 @@ class DetailHeaderSection: UICollectionReusableView {
     }
     
     func configure(movieDetail: MovieDetailResponse?) {
-//        Nuke.loadImage(
-//            with: movieDetail?.backdropURL,
-//            options: ImageLoadingOptions(
-//                transition: .fadeIn(duration: 0.33)
-//            ),
-//            into: self.imgBgTop
-//        )
-//        
-//        Nuke.loadImage(
-//            with: movieDetail?.posterURL,
-//            options: ImageLoadingOptions(
-//                transition: .fadeIn(duration: 0.33)
-//            ),
-//            into: self.imgAvatar
-//        )
-        
         guard let url = URL(string: "https://image.tmdb.org/t/p/w300/\(movieDetail?.backdrop_path ?? "")") else {return}
         self.imgBgTop.sd_setImage(with: url,placeholderImage: UIImage(named: "detail_mockup_video"), completed: nil)
         
@@ -260,7 +244,7 @@ class DetailHeaderSection: UICollectionReusableView {
         self.desc.text = movieDetail?.overview
         self.title.text = movieDetail?.title
         self.lblTime.text = movieDetail?.releaseDate
-        self.lblRating.text = "\(String(describing: movieDetail?.rating))"
+        self.lblRating.text = "\(movieDetail?.rating ?? 0)"
         self.cosmosView.rating = movieDetail?.rating ?? 0
         
         self.btnMore.isHidden = !showReadMoreButton()

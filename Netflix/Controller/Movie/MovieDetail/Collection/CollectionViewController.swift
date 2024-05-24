@@ -27,7 +27,7 @@ class CollectionViewController: UIViewController {
         registerTableView()
         
         SwiftEventBus.onMainThread(self, name: "updateCategoryTab") { result in
-            let movieDetails : MovieDetailResponse = result?.object as! MovieDetailResponse
+            let movieDetails : MovieDetailResponse = result?.object as! MovieDetailResponse 
             self.videoFilters = movieDetails.videos.results.filter{ $0.type == "Teaser" }
             self.update(videos: self.videoFilters)
              }

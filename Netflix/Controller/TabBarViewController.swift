@@ -24,10 +24,10 @@ class TabBarViewController: UITabBarController {
         let homeNavi = setupNavigationController(rootViewController: HomeViewController(), tabBarImage: "homeIcon")
         let newHotNavi = setupNavigationController(rootViewController: NewAndHotViewController(), tabBarImage: "playStackIcon")
         let searchNavi = setupNavigationController(rootViewController: SearchViewController(), tabBarImage: "searchIcon")
-        let fastLaughsNavi = setupNavigationController(rootViewController: FastLaughsViewController(), tabBarImage: "smileIcon")
+//        let fastLaughsNavi = setupNavigationController(rootViewController: FastLaughsViewController(), tabBarImage: "smileIcon")
         let myListNavi = setupNavigationController(rootViewController: MyListViewController(), tabBarImage: "List")
 
-        setViewControllers([homeNavi, newHotNavi, fastLaughsNavi, searchNavi, myListNavi], animated: true)
+        setViewControllers([homeNavi, newHotNavi, /*fastLaughsNavi,*/ searchNavi, myListNavi], animated: true)
     }
     
     private func setupNavigationController(rootViewController: UIViewController, tabBarImage: String) -> UINavigationController {

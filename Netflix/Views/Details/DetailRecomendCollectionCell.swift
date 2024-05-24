@@ -5,7 +5,13 @@
 import Foundation
 import UIKit
 
+protocol DetailRecommendViewDelegate: AnyObject {
+    func didSelectMovie(movie: Movie)
+}
+
 class DetailRecomendCollectionCell: BaseCollectionCell {
+    
+    weak var delegate: DetailRecommendViewDelegate?
     
     var arr = [Movie]()
     
@@ -38,7 +44,7 @@ extension DetailRecomendCollectionCell: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
+        delegate?.didSelectMovie(movie: arr[indexPath.row])
     }
     
 }
