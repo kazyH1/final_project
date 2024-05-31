@@ -27,6 +27,8 @@ class OnboardingViewController: UIViewController {
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        onboardingTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        onboardingContentsLabel.translatesAutoresizingMaskIntoConstraints = false
         applyContraints(onboardingTitleLabel)
         applyContraints(onboardingContentsLabel)
         bindViewModel()
@@ -34,8 +36,7 @@ class OnboardingViewController: UIViewController {
     }
     
     func applyContraints(_ lbl: UILabel){
-        let lblConstraints = [
-            lbl.widthAnchor.constraint(equalToConstant: view.frame.width)]
+        let lblConstraints = [lbl.centerXAnchor.constraint(equalTo: view.centerXAnchor)]
         NSLayoutConstraint.activate(lblConstraints)
     }
     private func bindViewModel() {

@@ -43,6 +43,11 @@
 		00B8F7302BECDB5900839C2F /* MovieDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00B8F72F2BECDB5800839C2F /* MovieDetailViewController.xib */; };
 		00C6CD8A2BF5EC6E0020376D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84826AC82BC7C2D300E115C2 /* Assets.xcassets */; };
 		00C785782BED139200D0E041 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C785772BED139100D0E041 /* BaseViewController.swift */; };
+		00D37BAD2C060AD500A83951 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D37BAC2C060AD500A83951 /* UserInfoViewController.swift */; };
+		00D37BAF2C060B4200A83951 /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D37BAE2C060B4200A83951 /* Member.swift */; };
+		00D37BB12C060BEA00A83951 /* MyListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D37BB02C060BEA00A83951 /* MyListViewModel.swift */; };
+		00D37BB52C060EE600A83951 /* UserManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 00D37BB42C060EE600A83951 /* UserManagementViewController.xib */; };
+		00D37BB82C0611AF00A83951 /* UserInfoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D37BB72C0611AF00A83951 /* UserInfoCollectionViewCell.swift */; };
 		00EF116B2BF6EDF3008428D3 /* NewAndHotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EF116A2BF6EDF3008428D3 /* NewAndHotViewModel.swift */; };
 		1EA0F5531D1060B58E314D6B /* Pods_Netflix_NetflixUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5571EF57C600DDF8200BB8F /* Pods_Netflix_NetflixUITests.framework */; };
 		6F4DB968DEF038CEFC7AD9E5 /* Pods_Netflix.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BCFD830592E3C085F48A6D5 /* Pods_Netflix.framework */; };
@@ -60,7 +65,6 @@
 		846861522BDF419B00BC9490 /* FastLaughsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 846861502BDF419B00BC9490 /* FastLaughsViewController.xib */; };
 		846861542BDF41BA00BC9490 /* FastLaughsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846861532BDF41BA00BC9490 /* FastLaughsViewModel.swift */; };
 		8468615F2BDF42B100BC9490 /* UserManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8468615D2BDF42B100BC9490 /* UserManagementViewController.swift */; };
-		846861602BDF42B100BC9490 /* UserManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8468615E2BDF42B100BC9490 /* UserManagementViewController.xib */; };
 		846861622BDF42CE00BC9490 /* UserManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846861612BDF42CE00BC9490 /* UserManagementViewModel.swift */; };
 		8468616E2BDF45D000BC9490 /* WatchingMovieViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8468616C2BDF45D000BC9490 /* WatchingMovieViewController.swift */; };
 		846861722BDF45E400BC9490 /* MovieDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 846861702BDF45E400BC9490 /* MovieDetailViewController.swift */; };
@@ -171,6 +175,11 @@
 		00A30FC02BFCA1BD008D4B74 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		00B8F72F2BECDB5800839C2F /* MovieDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MovieDetailViewController.xib; sourceTree = "<group>"; };
 		00C785772BED139100D0E041 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		00D37BAC2C060AD500A83951 /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
+		00D37BAE2C060B4200A83951 /* Member.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		00D37BB02C060BEA00A83951 /* MyListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListViewModel.swift; sourceTree = "<group>"; };
+		00D37BB42C060EE600A83951 /* UserManagementViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserManagementViewController.xib; sourceTree = "<group>"; };
+		00D37BB72C0611AF00A83951 /* UserInfoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoCollectionViewCell.swift; sourceTree = "<group>"; };
 		00EF116A2BF6EDF3008428D3 /* NewAndHotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAndHotViewModel.swift; sourceTree = "<group>"; };
 		4BCFD830592E3C085F48A6D5 /* Pods_Netflix.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Netflix.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4BD152FB74719B79B72DD5B0 /* Pods-Netflix-NetflixUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Netflix-NetflixUITests.release.xcconfig"; path = "Target Support Files/Pods-Netflix-NetflixUITests/Pods-Netflix-NetflixUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -190,7 +199,6 @@
 		846861502BDF419B00BC9490 /* FastLaughsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FastLaughsViewController.xib; sourceTree = "<group>"; };
 		846861532BDF41BA00BC9490 /* FastLaughsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastLaughsViewModel.swift; sourceTree = "<group>"; };
 		8468615D2BDF42B100BC9490 /* UserManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementViewController.swift; sourceTree = "<group>"; };
-		8468615E2BDF42B100BC9490 /* UserManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserManagementViewController.xib; sourceTree = "<group>"; };
 		846861612BDF42CE00BC9490 /* UserManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManagementViewModel.swift; sourceTree = "<group>"; };
 		8468616C2BDF45D000BC9490 /* WatchingMovieViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchingMovieViewController.swift; sourceTree = "<group>"; };
 		846861702BDF45E400BC9490 /* MovieDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewController.swift; sourceTree = "<group>"; };
@@ -337,6 +345,22 @@
 			path = SearchResults;
 			sourceTree = "<group>";
 		};
+		00D37BAB2C060A6900A83951 /* UserInfo */ = {
+			isa = PBXGroup;
+			children = (
+				00D37BAC2C060AD500A83951 /* UserInfoViewController.swift */,
+			);
+			path = UserInfo;
+			sourceTree = "<group>";
+		};
+		00D37BB62C06117800A83951 /* UserInfoCollectionViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				00D37BB72C0611AF00A83951 /* UserInfoCollectionViewCell.swift */,
+			);
+			path = UserInfoCollectionViewCell;
+			sourceTree = "<group>";
+		};
 		0141AD610EDA447E6E71999C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -359,6 +383,7 @@
 				BABA07EE2BF19057008319A1 /* MyList */,
 				846861632BDF438200BC9490 /* Movie */,
 				846861742BDF45F700BC9490 /* SignIn */,
+				00D37BAB2C060A6900A83951 /* UserInfo */,
 				8468615C2BDF423800BC9490 /* UserManagerment */,
 				8468614E2BDF417D00BC9490 /* FastLaughs */,
 				846861472BDF402900BC9490 /* Search */,
@@ -411,7 +436,7 @@
 			isa = PBXGroup;
 			children = (
 				8468615D2BDF42B100BC9490 /* UserManagementViewController.swift */,
-				8468615E2BDF42B100BC9490 /* UserManagementViewController.xib */,
+				00D37BB42C060EE600A83951 /* UserManagementViewController.xib */,
 				846861612BDF42CE00BC9490 /* UserManagementViewModel.swift */,
 			);
 			path = UserManagerment;
@@ -472,6 +497,7 @@
 				BABA07EB2BF18FE7008319A1 /* Title.swift */,
 				BABA07F02BF1913A008319A1 /* TitleView.swift */,
 				00191B8C2BF34937000CC6AF /* TitlePreview.swift */,
+				00D37BAE2C060B4200A83951 /* Member.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -650,6 +676,7 @@
 		84E7DCB72BC8DA0900B4674D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				00D37BB62C06117800A83951 /* UserInfoCollectionViewCell */,
 				000247712BFC5908000D2B8D /* Details */,
 				0002476C2BFC5736000D2B8D /* Sections */,
 				000247692BFC56D2000D2B8D /* Base */,
@@ -722,6 +749,7 @@
 			children = (
 				BABA07ED2BF19057008319A1 /* MyListViewController.swift */,
 				005686562BF1EF8300D9B615 /* MyListViewController.xib */,
+				00D37BB02C060BEA00A83951 /* MyListViewModel.swift */,
 			);
 			path = MyList;
 			sourceTree = "<group>";
@@ -861,6 +889,7 @@
 				846861782BDF461F00BC9490 /* DisplayViewController.xib in Resources */,
 				BA2DABBD2BF011D6008C06B6 /* MoreLikeThisViewController.xib in Resources */,
 				BA2DABBA2BF011D6008C06B6 /* EpisodesViewController.xib in Resources */,
+				00D37BB52C060EE600A83951 /* UserManagementViewController.xib in Resources */,
 				00191B8A2BF34378000CC6AF /* TitleTableViewCell.xib in Resources */,
 				84CCF2672BEB128200C45FF3 /* OnboardingViewController.xib in Resources */,
 				BA2DABC32BF011D6008C06B6 /* TrailersMoreViewController.xib in Resources */,
@@ -875,7 +904,6 @@
 				0056865C2BF1F17900D9B615 /* InfoViewController.xib in Resources */,
 				846861862BDF802E00BC9490 /* SignInViewController.xib in Resources */,
 				8468614B2BDF404000BC9490 /* SearchViewController.xib in Resources */,
-				846861602BDF42B100BC9490 /* UserManagementViewController.xib in Resources */,
 				001055A82BF5FB3500279EC7 /* WatchingMovieViewController.xib in Resources */,
 				00B8F7302BECDB5900839C2F /* MovieDetailViewController.xib in Resources */,
 				BA2DABC02BF011D6008C06B6 /* CollectionViewController.xib in Resources */,
@@ -1027,6 +1055,8 @@
 				0002477E2BFC5957000D2B8D /* DetailVideoViewCell.swift in Sources */,
 				846861512BDF419B00BC9490 /* FastLaughsViewController.swift in Sources */,
 				84CCF2692BEB1C3500C45FF3 /* OnboardingSlide.swift in Sources */,
+				00D37BAF2C060B4200A83951 /* Member.swift in Sources */,
+				00D37BAD2C060AD500A83951 /* UserInfoViewController.swift in Sources */,
 				00C785782BED139200D0E041 /* BaseViewController.swift in Sources */,
 				8496B23C2BEA40F500531D2E /* DisplayViewModel.swift in Sources */,
 				000247702BFC5766000D2B8D /* DetailHeaderTitle.swift in Sources */,
@@ -1058,6 +1088,7 @@
 				8496B23A2BE9DDB600531D2E /* Movie.swift in Sources */,
 				000247802BFC5957000D2B8D /* DetailCommentViewCell.swift in Sources */,
 				84CCF2702BEB36C500C45FF3 /* Category.swift in Sources */,
+				00D37BB82C0611AF00A83951 /* UserInfoCollectionViewCell.swift in Sources */,
 				BABA07F72BF19CB5008319A1 /* InfoViewController.swift in Sources */,
 				BA2DABB92BF011D6008C06B6 /* EpisodesViewController.swift in Sources */,
 				0002475E2BFC4B89000D2B8D /* Strings.swift in Sources */,
@@ -1084,6 +1115,7 @@
 				001055A62BF5FAA300279EC7 /* DeviceOrientation.swift in Sources */,
 				84CCF2662BEB128200C45FF3 /* OnboardingViewController.swift in Sources */,
 				BA14240C2BF0FCEC00AFF0DB /* VideoInfo.swift in Sources */,
+				00D37BB12C060BEA00A83951 /* MyListViewModel.swift in Sources */,
 				BA2DABC22BF011D6008C06B6 /* TrailersMoreViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,7 +12,7 @@ final class DateTimeConvert {
     
     func convertDateFormat(inputDate: String, toFormat: String) -> String {
          let olDateFormatter = DateFormatter()
-         olDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+         olDateFormatter.dateFormat = "yyyy-MM-dd"
 
          let oldDate = olDateFormatter.date(from: inputDate)
 

@@ -45,6 +45,10 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         scrollView.delegate = self
         navigationController?.navigationBar.prefersLargeTitles = false
         scrollView.contentOffset.x = 0
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.layoutIfNeeded()
+        scrollView.isScrollEnabled = true
+        scrollView.contentSize = CGSize(width: self.view.frame.width, height: scrollView.frame.size.height)
         configureEpisodesViewController()
         
         playerView.delegate = self
@@ -79,6 +83,12 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         
         moviesMyList = Movie.getMyListMovie() ?? []
         self.addMyListButton.isHidden = checkMovieExistMyList(movie: self.movie!)
+        SwiftEventBus.onMainThread(self, name: "DeleteItemMyList") {result in
+            //my list
+            self.moviesMyList = Movie.getMyListMovie() ?? []
+            //show button add to my list
+            self.addMyListButton.isHidden = self.checkMovieExistMyList(movie: self.movie!)
+        }
     }
     
     @IBAction func infoButton(_ sender: UIButton) {

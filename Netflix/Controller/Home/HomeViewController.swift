@@ -9,10 +9,11 @@ import UIKit
 import FirebaseAuth
 import SwiftEventBus
 
+
 class HomeViewController: BaseViewController {
     
     
-    @IBOutlet private weak var homeFeedTableView: UITableView!
+    @IBOutlet weak var homeFeedTableView: UITableView!
     
     // MARK: - Properties
     private var viewModel: HomeViewModel?
@@ -33,7 +34,24 @@ class HomeViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        checkMovieExistMyList(movie: randomTrendingMovie)
+        SwiftEventBus.onMainThread(self, name: "ReloadHomeView") { _ in
+            self.getMovieForTableHeaderView()
+        }
+        
+        if self.checkMovieExistMyList(movie: randomTrendingMovie) == false {
+            self.headerView?.addMyListButton.setImage(UIImage(named: "addList" ), for: .normal)
+        } else {
+            self.headerView?.addMyListButton.setImage(UIImage(named: "addListSuccess" ), for: .normal)
+        }
+//        SwiftEventBus.onMainThread(self, name: "ReloadHomeFeedTableView") { result in
+////
+       
+//            self.homeFeedTableView.reloadData()
+//        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
     }
     
     // MARK: - View Lifecycle
@@ -45,12 +63,22 @@ class HomeViewController: BaseViewController {
         setupTableView()
         configureNavbar()
         setupTableHeaderView()
-        moviesMyList = Movie.getMyListMovie() ?? []
-        // Configure header view
         getMovieForTableHeaderView()
-        checkMovieExistMyList(movie: randomTrendingMovie)
+        moviesMyList = Movie.getMyListMovie() ?? []
+        
+        SwiftEventBus.onMainThread(self, name: "DeleteItemMyList") {result in
+            self.moviesMyList = Movie.getMyListMovie() ?? []
+            //show button add to my list
+            if self.checkMovieExistMyList(movie: self.randomTrendingMovie) == false {
+                self.headerView?.addMyListButton.setImage(UIImage(named: "addList"), for: .normal)
+            }
+        }
     }
     
+    
+    deinit {
+        SwiftEventBus.unregister(self)
+    }
 }
 
 // MARK: - setupUI
@@ -197,7 +225,7 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
             title = "Success"
             action = "OK"
             //event to update MyList screen
-            self.headerView?.addMyListButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+            self.headerView?.addMyListButton.setImage(UIImage(named: "addListSuccess" ), for: .normal)
             self.headerView?.addMyListButton.tintColor = .white
             SwiftEventBus.post("AddToMyList")
         } else {
@@ -214,6 +242,7 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
     func didTapInfoButton(movie: Movie) {
         let infoVC = InfoViewController()
         infoVC.movie = movie
+        infoVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(infoVC, animated: true)
     }
     
@@ -233,7 +262,6 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
             return false
         }
         if moviesMyList!.contains(where: {$0.id == movie!.id}) {
-            self.headerView?.addMyListButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
             return true
         } else {
             return false

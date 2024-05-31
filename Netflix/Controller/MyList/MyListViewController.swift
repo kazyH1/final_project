@@ -35,6 +35,7 @@ class MyListViewController: UIViewController {
     private func registerTableView() {
         myListTableView.dataSource = self
         myListTableView.delegate = self
+        myListTableView.separatorColor = UIColor("#737373")
         myListTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
     }
     
@@ -66,7 +67,8 @@ class MyListViewController: UIViewController {
 
 extension MyListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        moviesMyList?.count ?? 0
+        self.myListTableView.setEmptyMessage("My List is empty data!", moviesMyList == nil || moviesMyList!.isEmpty)
+        return moviesMyList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -87,6 +89,17 @@ extension MyListViewController: UITableViewDelegate, UITableViewDataSource {
         movieDetailVC.movie = moviesMyList?[indexPath.row]
         movieDetailVC.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(movieDetailVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.beginUpdates()
+            moviesMyList?.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            Movie.saveMyListMovie(movies: moviesMyList ?? [])
+            SwiftEventBus.post("DeleteItemMyList")
+            tableView.endUpdates()
+        }
     }
 }
 

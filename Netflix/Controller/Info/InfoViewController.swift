@@ -26,11 +26,11 @@ class InfoViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupLayout()
-        getDetailMovie()
         configureNavbar()
         navigationItem.leftBarButtonItems  = [UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .done, target: self, action: #selector(backAction)),
-                                              UIBarButtonItem(image: UIImage(named: "netflixLogo"), style: .done, target: self, action: nil)
-        ]
+                                              UIBarButtonItem(image: UIImage(named: "netflixLogo"), style: .done, target: self, action: nil)]
+        
+        getDetailMovie()
     }
     
     // MARK: API
@@ -38,13 +38,17 @@ class InfoViewController: BaseViewController {
         guard (movie?.id) != nil else {
             return
         }
+        showSpinner(onView: self.view)
         viewModel?.fetchMovieDetails(movieId: movie?.id ?? 0) { [weak self] success in
             guard let strongSelf = self else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                strongSelf.showSpinner(onView: strongSelf.view)
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
                 if success {
                     if (strongSelf.viewModel?.movieDetails) != nil {
-                        strongSelf.infoCollectionView.reloadData()
+                        strongSelf.infoCollectionView?.reloadData()
+                        strongSelf.infoCollectionView.collectionViewLayout.invalidateLayout()
+                        strongSelf.infoCollectionView.reloadItems(at: [IndexPath(item: 1, section: 0)])
+                        strongSelf.infoCollectionView.reloadItems(at: [IndexPath(item: 2, section: 0)])
+                        strongSelf.infoCollectionView.reloadItems(at: [IndexPath(item: 3, section: 0)])
                     }
                 } else {
                     strongSelf.alertHandelError()
@@ -54,6 +58,10 @@ class InfoViewController: BaseViewController {
         }
     }
     
+    
+    override func viewWillLayoutSubviews() {
+        infoCollectionView.collectionViewLayout.invalidateLayout()
+    }
     
     private func alertHandelError(){
         let alertController = UIAlertController(title: "Error", message: "Failed to fetch movie details. Please try again later.", preferredStyle: .alert)
@@ -76,12 +84,11 @@ class InfoViewController: BaseViewController {
         }
         self.infoCollectionView.bounces = false
         self.infoCollectionView.alwaysBounceVertical = false
-        self.infoCollectionView.register(DetailSeriesCastCollectionCell.self, self.infoCollectionView)
-        self.infoCollectionView.register(DetailVideoCollectionCell.self, self.infoCollectionView)
-        self.infoCollectionView.register(DetailCommentCollectionCell.self, self.infoCollectionView)
-        self.infoCollectionView.register(DetailRecomendCollectionCell.self, self.infoCollectionView)
         self.infoCollectionView.registerHeader(DetailHeaderSection.self, self.infoCollectionView)
         self.infoCollectionView.registerHeader(DetailHeaderTitle.self, self.infoCollectionView)
+        self.infoCollectionView.register(DetailSeriesCastCollectionCell.self, self.infoCollectionView)
+        self.infoCollectionView.register(DetailVideoCollectionCell.self, self.infoCollectionView)
+        self.infoCollectionView.register(DetailRecomendCollectionCell.self, self.infoCollectionView)
         self.infoCollectionView.backgroundColor = .black
     }
     
@@ -177,7 +184,7 @@ extension InfoViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if indexPath.section == DetailSection.series {
-            return CGSize(width: fullWidth, height: 178)
+            return CGSize(width: fullWidth, height: 200)
         }
         if indexPath.section == DetailSection.video {
             return CGSize(width: fullWidth, height: 165)

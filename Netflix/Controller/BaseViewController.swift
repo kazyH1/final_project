@@ -20,17 +20,19 @@ class BaseViewController: UIViewController {
         var image = UIImage(named: "netflixLogo")
         image = image?.withRenderingMode(.alwaysOriginal)
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: image, style: .done, target: self, action: nil)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .done, target: self, action: #selector(handleLogout))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"), style: .done, target: self, action: #selector(pushUserManagerment))
         navigationController?.navigationBar.tintColor = .white
     }
     
     
-    @objc func handleLogout() {
-        NetworkManager.shared.logOut()
-        let displayVC = DisplayViewController()
-        let navigationController = UINavigationController(rootViewController: displayVC)
-        navigationController.modalPresentationStyle = .fullScreen
-        present(navigationController, animated: true, completion: nil)
+    @objc func pushUserManagerment() {
+//        let userManagermentVC = UserManagementViewController()
+//        let navigationController = UINavigationController(rootViewController: userManagermentVC)
+//        navigationController.modalPresentationStyle = .fullScreen
+//        present(navigationController, animated: true, completion: nil)
+        
+        let userManagementViewController = UserManagementViewController()
+        navigationController?.pushViewController(userManagementViewController, animated: true)
     }
     
 

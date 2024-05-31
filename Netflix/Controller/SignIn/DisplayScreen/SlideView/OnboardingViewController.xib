@@ -2,8 +2,9 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,34 +20,40 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ROH-Zf-C8L">
-                    <rect key="frame" x="196.66666666666666" y="346" width="0.0" height="0.0"/>
-                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="32"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="center" semanticContentAttribute="playback" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" showsExpansionTextWhenTruncated="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ROH-Zf-C8L">
+                    <rect key="frame" x="10" y="327.66666666666669" width="373" height="36.666666666666686"/>
+                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="27"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
-                    <variation key="heightClass=regular-widthClass=regular">
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="44"/>
-                    </variation>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Weg-68-pNj">
-                    <rect key="frame" x="196.66666666666666" y="396" width="0.0" height="0.0"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" showsExpansionTextWhenTruncated="YES" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Weg-68-pNj">
+                    <rect key="frame" x="10" y="414.33333333333331" width="373" height="19.333333333333314"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
-                    <variation key="heightClass=regular-widthClass=regular">
-                        <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                    </variation>
                 </label>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <color key="backgroundColor" systemColor="labelColor"/>
+            <color key="tintColor" systemColor="labelColor"/>
             <constraints>
+                <constraint firstItem="Weg-68-pNj" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="10" id="CcG-3Z-PT6"/>
                 <constraint firstItem="Weg-68-pNj" firstAttribute="top" secondItem="ROH-Zf-C8L" secondAttribute="bottom" constant="50" id="HHJ-YI-PGw"/>
                 <constraint firstItem="Weg-68-pNj" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="R4H-uM-mSD"/>
+                <constraint firstItem="ROH-Zf-C8L" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="10" id="j55-FH-3BS"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Weg-68-pNj" secondAttribute="trailing" constant="10" id="jZp-V5-bdQ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="ROH-Zf-C8L" secondAttribute="trailing" constant="10" id="kO7-BO-NAo"/>
+                <constraint firstItem="ROH-Zf-C8L" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="268.67000000000002" id="lyD-ai-PXe"/>
                 <constraint firstItem="ROH-Zf-C8L" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="-80" id="sfk-r7-mEk"/>
                 <constraint firstItem="ROH-Zf-C8L" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="vma-nu-pYT"/>
+                <constraint firstItem="Weg-68-pNj" firstAttribute="top" secondItem="ROH-Zf-C8L" secondAttribute="bottom" constant="50" id="yEl-nS-QOV"/>
             </constraints>
             <point key="canvasLocation" x="131" y="-11"/>
         </view>
     </objects>
+    <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>

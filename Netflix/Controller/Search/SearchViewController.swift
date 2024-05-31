@@ -57,6 +57,7 @@ class SearchViewController: UIViewController {
     private func registerTableView() {
         searchTableView.dataSource = self
         searchTableView.delegate = self
+        searchTableView.separatorColor = UIColor("#737373")
         searchTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
     }
 }

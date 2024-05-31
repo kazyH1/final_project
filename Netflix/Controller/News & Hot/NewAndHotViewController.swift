@@ -37,6 +37,7 @@ final class NewAndHotViewController: BaseViewController {
     private func registerTableView() {
         upComingTableView.dataSource = self
         upComingTableView.delegate = self
+        upComingTableView.separatorColor = UIColor("#737373")
         upComingTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
     }
     

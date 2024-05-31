@@ -45,6 +45,11 @@ extension DisplayViewController {
     @objc func didTapButton(_ button: UIButton) {
         let signInVC = SignInViewController()
         self.navigationController?.pushViewController(signInVC, animated: true)
+        
+        //test user info view
+//        let viewController = UserInfoViewController()
+//        navigationController?.setViewControllers([viewController], animated: true)
+//        navigationController?.navigationBar.isHidden = true
     }
     
     private func configureNavbar() {
@@ -57,13 +62,13 @@ extension DisplayViewController {
     private func configureOnboardingSlides() {
         for (index, onboardingSlide) in viewModel.onboardingSlides.enumerated() {
             let slideView = OnboardingViewController(viewModel: OnboardingSlideViewModel(onboardingSlide: onboardingSlide))
-            slideView.view.frame = CGRect(x: CGFloat(index) * view.frame.width, y: 0, width: view.frame.width, height: view.frame.height)
+            slideView.view.frame = CGRect(x: CGFloat(index) * (view.frame.width + 20 + CGFloat(index + 3) * 3) , y: 0, width: view.frame.width, height: view.frame.height)
             addChild(slideView)
             onboardingScrollView.addSubview(slideView.view)
             slideView.didMove(toParent: self)
         }
-        
-        onboardingScrollView.contentSize = CGSize(width: view.frame.width * CGFloat(viewModel.onboardingSlides.count), height: view.frame.height)
+        onboardingScrollView.translatesAutoresizingMaskIntoConstraints = false
+        onboardingScrollView.contentSize = CGSize(width: view.frame.width * CGFloat(viewModel.onboardingSlides.count) + 500, height: view.frame.height)
         onboardingScrollView.isPagingEnabled = true
         onboardingScrollView.showsHorizontalScrollIndicator = false
         onboardingScrollView.delegate = self

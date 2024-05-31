@@ -33,11 +33,12 @@ class SignInViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel?.delegate = self
+        configureUI()
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        configureUI()
+       
     }
     
     // MARK: - Actions
@@ -63,6 +64,11 @@ extension SignInViewController {
         designPlaceholder(emailTextField, placeholderText: "Email or phone number", label: emailLabel)
         designPlaceholder(passwordTextField, placeholderText: "Password", label: passLabel)
         configureNavbar()
+        signInButton.setTitleColor(.white, for: .normal)
+        signInButton.layer.borderColor = UIColor.white.cgColor
+        signInButton.layer.borderWidth = 1
+        signInButton.layer.cornerRadius = 5.0
+        signInButton.layer.masksToBounds = true
     }
     
     private func designPlaceholder(_ textField: UITextField, placeholderText: String, label: UILabel) {
@@ -71,10 +77,17 @@ extension SignInViewController {
     }
     
     private func configureNavbar() {
-        let backButton = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"), style: .done, target: self, action: #selector(backPreviousScreen))
+        let backButton = UIButton(type: .system)
+        backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        backButton.setTitle("", for: .normal)
+        backButton.titleLabel?.textColor = .black
+        backButton.addTarget(self, action: #selector(backPreviousScreen), for: .touchUpInside)
+        let backButtonItem = UIBarButtonItem(customView: backButton)
+        
+        
         let logoImage = UIImage(named: "netflixLogo")?.withRenderingMode(.alwaysOriginal)
         let logoButton = UIBarButtonItem(image: logoImage, style: .done, target: nil, action: nil)
-        navigationItem.leftBarButtonItems = [backButton, logoButton]
+        navigationItem.leftBarButtonItems = [backButtonItem, logoButton]
         navigationController?.navigationBar.backgroundColor = .black
         navigationController?.navigationBar.tintColor = .white
     }
@@ -97,9 +110,11 @@ extension SignInViewController {
 extension SignInViewController: SignInViewModelDelegate {
     
     func signInSuccess() {
-        let tabBarViewController = TabBarViewController()
-        navigationController?.setViewControllers([tabBarViewController], animated: true)
-        navigationController?.navigationBar.isHidden = true
+        self.showSpinner(onView: self.view)
+        let userInfoVC = UserInfoViewController()
+        navigationController?.pushViewController(userInfoVC, animated: true)
+        self.removeSpinner()
+       // navigationController?.navigationBar.isHidden = true
     }
     
     func signInFailure(with error: String) {
@@ -113,4 +128,3 @@ extension SignInViewController: SignInViewModelDelegate {
         present(alert, animated: true, completion: nil)
     }
 }
-

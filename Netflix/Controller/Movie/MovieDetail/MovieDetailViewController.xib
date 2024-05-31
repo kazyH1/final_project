@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,7 +15,7 @@
                 <outlet property="overviewLabel" destination="87W-nf-aeX" id="XCO-86-aO3"/>
                 <outlet property="playerView" destination="Jo4-u5-2ol" id="h29-Bf-0LU"/>
                 <outlet property="scrollContentView" destination="6UN-eR-jxh" id="HdP-3v-VUy"/>
-                <outlet property="scrollView" destination="zNA-KS-3eJ" id="7M2-IP-k5E"/>
+                <outlet property="scrollView" destination="zNA-KS-3eJ" id="jpI-3q-hxX"/>
                 <outlet property="titleLabel" destination="DL3-rk-Zyo" id="gSc-i1-1FB"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -29,7 +29,7 @@
                     <rect key="frame" x="0.0" y="59" width="345.33333333333331" height="793"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6UN-eR-jxh" userLabel="contentView">
-                            <rect key="frame" x="0.0" y="0.0" width="345.33333333333331" height="1000"/>
+                            <rect key="frame" x="0.0" y="0.0" width="345.33333333333331" height="1500"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jo4-u5-2ol" customClass="YTPlayerView">
                                     <rect key="frame" x="0.0" y="0.0" width="413" height="220"/>
@@ -60,7 +60,7 @@
                                     <color key="highlightedColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rjn-d5-zhL">
-                                    <rect key="frame" x="0.0" y="475" width="345.33333333333331" height="525"/>
+                                    <rect key="frame" x="0.0" y="475" width="345.33333333333331" height="1025"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HDz-n6-KXb">
@@ -114,7 +114,7 @@
                                         <constraint firstAttribute="height" constant="40" id="XaV-KW-3ad"/>
                                     </constraints>
                                 </stackView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="87W-nf-aeX">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="9" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="87W-nf-aeX">
                                     <rect key="frame" x="10" y="405" width="325.33333333333331" height="60"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="60" id="o2r-cs-vf3"/>
@@ -147,7 +147,7 @@
                                 <constraint firstItem="Rjn-d5-zhL" firstAttribute="top" secondItem="87W-nf-aeX" secondAttribute="bottom" constant="10" id="MXE-T0-bDt"/>
                                 <constraint firstItem="DL3-rk-Zyo" firstAttribute="top" secondItem="6UN-eR-jxh" secondAttribute="top" constant="255" id="Q79-eE-GXM"/>
                                 <constraint firstItem="DL3-rk-Zyo" firstAttribute="top" secondItem="R8J-Wg-335" secondAttribute="bottom" constant="10" id="QOo-H2-oPg"/>
-                                <constraint firstAttribute="height" constant="1000" id="UUk-PA-Pu8"/>
+                                <constraint firstAttribute="height" constant="1500" id="UUk-PA-Pu8"/>
                                 <constraint firstItem="Sp8-fa-0II" firstAttribute="leading" secondItem="6UN-eR-jxh" secondAttribute="leading" constant="10" id="UVR-iT-E3G"/>
                                 <constraint firstAttribute="trailing" secondItem="HDz-n6-KXb" secondAttribute="trailing" constant="10" id="Upc-Jw-e26"/>
                                 <constraint firstItem="87W-nf-aeX" firstAttribute="top" secondItem="ifL-LR-ppy" secondAttribute="bottom" constant="10" id="VMR-eS-TOp"/>
@@ -208,7 +208,7 @@
             <color red="0.43529411764705883" green="0.44313725490196076" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -8,6 +8,8 @@ import Nuke
 
 class DetailSeriesCastViewCell: UICollectionViewCell {
     
+    static let identifier = "DetailSeriesCastViewCell"
+    
     private lazy var viewBg: UIView = {
         let outerView = UIView()
         self.addSubview(outerView)
@@ -27,9 +29,12 @@ class DetailSeriesCastViewCell: UICollectionViewCell {
         let labelTitle = UILabel()
         labelTitle.font = UIFont(name: font_helvetica_bold, size: 12)
         labelTitle.textColor = UIColor(red: 0.29, green: 0.29, blue: 0.29, alpha: 1)
-        labelTitle.textAlignment = .justified
-        labelTitle.numberOfLines = 1
+        labelTitle.textAlignment = .center
+        labelTitle.numberOfLines = 0
+        labelTitle.sizeToFit()
+        labelTitle.lineBreakMode = .byTruncatingTail
         self.addSubview(labelTitle)
+
         return labelTitle
     }()
     
@@ -37,8 +42,10 @@ class DetailSeriesCastViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont(name: font_helvetica, size: 12)
         label.textColor = UIColor(red: 0.608, green: 0.608, blue: 0.608, alpha: 1)
-        label.textAlignment = .justified
-        label.numberOfLines = 1
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.sizeToFit()
+        label.lineBreakMode = .byTruncatingTail
         self.addSubview(label)
         return label
     }()
@@ -46,6 +53,12 @@ class DetailSeriesCastViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.setupLayout()
+    }
+    
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.contentView.layoutIfNeeded() //This is the solution for :changed only after I tap the each cell
     }
     
     override func prepareForReuse() {
@@ -61,8 +74,8 @@ class DetailSeriesCastViewCell: UICollectionViewCell {
         
         self.viewBg.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(70)
-            $0.height.equalTo(102)
+            $0.width.equalTo(75)
+            $0.height.equalTo(100)
             $0.top.equalTo(15)
         }
         self.viewBg.viewShadow()
@@ -80,7 +93,7 @@ class DetailSeriesCastViewCell: UICollectionViewCell {
         self.desc.snp.makeConstraints {
             $0.left.right.equalTo(self.imgBg)
             $0.top.equalTo(self.title.snp.bottom).offset(2)
-            $0.height.equalTo(14)
+            $0.height.equalTo(50)
         }
     }
     

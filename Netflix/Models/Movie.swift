@@ -59,12 +59,22 @@ struct Movie: Codable {
     
     
     static func saveMyListMovie(movies: [Movie]){
+        var currentMember: Member? = Member.getCurrentMembers()
+        if(currentMember == nil) {
+            return
+        }
+        var id = currentMember?.id ?? 0
         let moviesData = try! JSONEncoder().encode(movies)
-        UserDefaults.standard.set(moviesData, forKey: "mylist")
+        UserDefaults.standard.set(moviesData, forKey: "mylist" + String(id))
     }
     
-    static func getMyListMovie() -> [Movie]?{
-        let moviesData = UserDefaults.standard.data(forKey: "mylist")
+     static func getMyListMovie() -> [Movie]?{
+         var currentMember: Member? = Member.getCurrentMembers()
+         if(currentMember == nil) {
+             return []
+         }
+        var id = currentMember?.id ?? 0
+        let moviesData = UserDefaults.standard.data(forKey: "mylist" + String(id))
         if(moviesData == nil){
             return []
         } else {

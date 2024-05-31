@@ -46,6 +46,7 @@ class TrailersMoreViewController: UIViewController {
         episodesTableView.register(UINib(nibName: "EpisodesTableViewCell", bundle: nil), forCellReuseIdentifier: "EpisodesTableViewCell")
         episodesTableView.delegate = self
         episodesTableView.dataSource = self
+        episodesTableView.separatorColor = UIColor("#737373")
     }
 }
 

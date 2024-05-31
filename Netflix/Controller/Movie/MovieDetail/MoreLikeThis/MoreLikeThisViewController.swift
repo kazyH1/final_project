@@ -48,6 +48,7 @@ class MoreLikeThisViewController: UIViewController {
         episodesTableView.backgroundColor = .black
         episodesTableView.delegate = self
         episodesTableView.dataSource = self
+        episodesTableView.separatorColor = UIColor("#737373")
     }
 }
 

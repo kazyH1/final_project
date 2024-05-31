@@ -246,6 +246,8 @@ class DetailHeaderSection: UICollectionReusableView {
         self.lblTime.text = movieDetail?.releaseDate
         self.lblRating.text = "\(movieDetail?.rating ?? 0)"
         self.cosmosView.rating = movieDetail?.rating ?? 0
+        self.cosmosView.isUserInteractionEnabled = false
+        
         
         self.btnMore.isHidden = !showReadMoreButton()
     }
