@@ -13,52 +13,42 @@ class SignInViewModel {
     private let database = Database.database().reference()
     
     func signIn(email: String, pass: String) {
-        Auth.auth().signIn(withEmail: email, password: pass) { [weak self] result, error in
-            guard let self = self else { return }
-            if let error = error as NSError? {
-                let errorCode = AuthErrorCode.Code(rawValue: error._code)
-                self.handleSignInFailure(errorCode: errorCode?.rawValue)
-            } else if let user = result?.user {
-                let user = User(email: user.email ?? "", uid: user.uid)
-                //self.saveUserLoggedInState(for: user)
-                
-                //save to firebase
-                var members = [Member]()
-                //let userID = Auth.auth().currentUser?.uid
-                Database.database().reference().child("users").child(user.uid).observeSingleEvent(of: .value, with: { snapshot in
-                    // Get user value
-                    print(snapshot.value as Any)
-                    for child in snapshot.children {
-                        let childSnap = child as! DataSnapshot
-                        let dict = childSnap.value as! [String: Any]
-                        let id = dict["id"] as? Int
-                        let name = dict["name"] as? String
-                        let image = dict["image"] as? String
-                        members.append(Member(id: id, name: name, image: image))
-                    }
-                    //save members
-                    Member.saveMembers(members: members)
-                    
-                }) { error in
-                    print(error.localizedDescription)
-                    //save members
-                    Member.saveMembers(members: [])
+        Task {
+            do {
+                let user = try await Auth.auth().signIn(withEmail: email, password: pass).user
+                let members = try await fetchUserData(for: user.uid)
+                // Save members
+                Member.saveMembers(members: members)
+                DispatchQueue.main.async {
+                    self.delegate?.signInSuccess()
                 }
-                
-                self.delegate?.signInSuccess()
-              
+            } catch {
+                if let error = error as NSError? {
+                    let errorCode = AuthErrorCode.Code(rawValue: error._code)
+                    DispatchQueue.main.async {
+                        self.handleSignInFailure(errorCode: errorCode?.rawValue)
+                    }
+                }
             }
         }
     }
     
-    
-    
-    private func saveUserLoggedInState(for user: User) {
-        database.child("users").child(user.uid).child("loggedIn").setValue(true)
+    private func fetchUserData(for uid: String) async throws -> [Member] {
+        let snapshot = try await database.child("users").child(uid).getData()
+        var members = [Member]()
+        for child in snapshot.children {
+            let childSnap = child as! DataSnapshot
+            let dict = childSnap.value as! [String: Any]
+            let id = dict["id"] as? Int
+            let name = dict["name"] as? String
+            let image = dict["image"] as? String
+            members.append(Member(id: id, name: name, image: image))
+        }
+        return members
     }
     
     private func handleSignInFailure(errorCode: Int?) {
-        //save members
+        // Save members
         Member.saveMembers(members: [])
         if let errorCode = errorCode, let authErrorCode = AuthErrorCode.Code(rawValue: errorCode) {
             switch authErrorCode {

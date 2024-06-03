@@ -65,8 +65,8 @@ class SearchViewController: UIViewController {
 extension SearchViewController {
     func configureNavigation() {
         
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationItem.largeTitleDisplayMode = .always
+//        navigationController?.navigationBar.prefersLargeTitles = true
+//        navigationController?.navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = "Search"
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()

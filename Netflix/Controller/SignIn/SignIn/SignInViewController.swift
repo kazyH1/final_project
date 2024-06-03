@@ -38,7 +38,7 @@ class SignInViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-       
+        
     }
     
     // MARK: - Actions
@@ -50,6 +50,7 @@ class SignInViewController: UIViewController {
     
     @IBAction func signInButtonTapped(_ sender: UIButton) {
         guard let email = emailTextField.text, let password = passwordTextField.text else { return }
+        self.showSpinner(onView: self.view)
         viewModel?.signIn(email: email, pass: password)
     }
 }
@@ -91,7 +92,7 @@ extension SignInViewController {
         navigationController?.navigationBar.backgroundColor = .black
         navigationController?.navigationBar.tintColor = .white
     }
-
+    
 }
 
 // MARK: - Helper Methods
@@ -110,15 +111,18 @@ extension SignInViewController {
 extension SignInViewController: SignInViewModelDelegate {
     
     func signInSuccess() {
-        self.showSpinner(onView: self.view)
-        let userInfoVC = UserInfoViewController()
-        navigationController?.pushViewController(userInfoVC, animated: true)
-        self.removeSpinner()
-       // navigationController?.navigationBar.isHidden = true
+        DispatchQueue.main.async {
+            self.removeSpinner()
+            let userInfoVC = UserInfoViewController()
+            self.navigationController?.pushViewController(userInfoVC, animated: true)
+        }
     }
     
     func signInFailure(with error: String) {
-        showAlert(title: "Login fail", message: error)
+        DispatchQueue.main.async {
+            self.removeSpinner()
+            self.showAlert(title: "Login fail", message: error)
+        }
     }
     
     func showAlert(title: String, message: String) {

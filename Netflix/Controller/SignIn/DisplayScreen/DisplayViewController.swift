@@ -45,11 +45,6 @@ extension DisplayViewController {
     @objc func didTapButton(_ button: UIButton) {
         let signInVC = SignInViewController()
         self.navigationController?.pushViewController(signInVC, animated: true)
-        
-        //test user info view
-//        let viewController = UserInfoViewController()
-//        navigationController?.setViewControllers([viewController], animated: true)
-//        navigationController?.navigationBar.isHidden = true
     }
     
     private func configureNavbar() {

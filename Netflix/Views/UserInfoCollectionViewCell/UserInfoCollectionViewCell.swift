@@ -12,13 +12,13 @@ class UserInfoCollectionViewCell: UICollectionViewCell {
     
     static let identifier = "UserInfoCollectionViewCell"
     
-    private let posterImageView: UIImageView = {
+    let posterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         return imageView
     }()
     
-    private let titleLabel : UILabel = {
+    let titleLabel : UILabel = {
        let title = UILabel()
         title.translatesAutoresizingMaskIntoConstraints = false
         return title

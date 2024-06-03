@@ -26,11 +26,6 @@ class BaseViewController: UIViewController {
     
     
     @objc func pushUserManagerment() {
-//        let userManagermentVC = UserManagementViewController()
-//        let navigationController = UINavigationController(rootViewController: userManagermentVC)
-//        navigationController.modalPresentationStyle = .fullScreen
-//        present(navigationController, animated: true, completion: nil)
-        
         let userManagementViewController = UserManagementViewController()
         navigationController?.pushViewController(userManagementViewController, animated: true)
     }

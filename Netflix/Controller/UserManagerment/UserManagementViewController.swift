@@ -19,14 +19,31 @@ class UserManagementViewController: BaseViewController {
         navigationController?.pushViewController(mylistVC, animated: true)
     }
     
-    @IBAction func signOut(_ sender: Any) {
+    @IBAction func signOut(_ sender: UIButton) {
+        let alertController = UIAlertController(title: "Sign out", message: "Are you sure to sign out?", preferredStyle: .alert)
+        
+        // Sign-out confirmation
+        let signOutAction = UIAlertAction(title: "Yes", style: .default) { _ in
+            self.handleSignOut()
+        }
+        alertController.addAction(signOutAction)
+        
+        // Cancel action
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    private func handleSignOut() {
         NetworkManager.shared.logOut()
+        
+        // Resetting the root view controller to DisplayViewController after sign-out
         let displayVC = DisplayViewController()
         let navigationController = UINavigationController(rootViewController: displayVC)
         navigationController.modalPresentationStyle = .fullScreen
-        present(navigationController, animated: true, completion: nil)
+        self.present(navigationController, animated: true, completion: nil)
     }
-    
     init() {
         super.init(nibName: nil, bundle: nil)
         self.viewModel = UserManagementViewModel()
@@ -52,13 +69,8 @@ class UserManagementViewController: BaseViewController {
     }
     
     func configureNavigation() {
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationItem.largeTitleDisplayMode = .always
-        
         let navBarAppearance = UINavigationBarAppearance()
         navBarAppearance.configureWithOpaqueBackground()
-        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         navBarAppearance.backgroundColor = .black
         navBarAppearance.shadowColor = nil
         navigationController?.navigationBar.isTranslucent = false
@@ -68,8 +80,7 @@ class UserManagementViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        members = Member.getMembers() ?? []
-        
+        moveCurrentUserToFirst()
         view.backgroundColor = .black
         
         //show back button
@@ -80,7 +91,7 @@ class UserManagementViewController: BaseViewController {
         
         configureNavigation()
         navigationController?.navigationBar.tintColor = .white
-     
+        
         view.addSubview(userInfoCollectionView)
         
         userInfoCollectionView.backgroundColor = .black
@@ -88,9 +99,8 @@ class UserManagementViewController: BaseViewController {
         userInfoCollectionView.delegate = self
         userInfoCollectionView.dataSource = self
         userInfoCollectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-   
+        
     }
-    
     
     public let userInfoCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -104,7 +114,7 @@ class UserManagementViewController: BaseViewController {
         return collectionView
         
     }()
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -112,20 +122,30 @@ class UserManagementViewController: BaseViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+    }
     
     @objc private func handleBackButtonTapped() {
         self.navigationController?.popViewController(animated: true)
-        navigationItem.largeTitleDisplayMode = .always
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.sizeToFit()
     }
-    
-    @IBAction func logout(_ sender: Any) {
-        let displayVC = DisplayViewController()
-        self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-        navigationController?.pushViewController(displayVC, animated: true)
+        
+    private func moveCurrentUserToFirst() {
+        members = Member.getMembers() ?? []
+        
+        if let currentUser = Member.getCurrentMembers() {
+            if let index = members.firstIndex(where: { $0.id == currentUser.id }) {
+                let currentUser = members.remove(at: index)
+                members.insert(currentUser, at: 0)
+            }
+        }
     }
-    
 }
 
 
@@ -137,7 +157,14 @@ extension UserManagementViewController: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserInfoCollectionViewCell.identifier, for: indexPath) as? UserInfoCollectionViewCell else {return UICollectionViewCell()}
         
-        cell.configure(with: members[indexPath.row])
+        let member = members[indexPath.row]
+        cell.configure(with: member)
+        
+        if let currentUser = Member.getCurrentMembers(), currentUser.id == member.id {
+            cell.titleLabel.textColor = .green
+        } else {
+            cell.titleLabel.text = member.name
+        }
         cell.backgroundColor = .black
         return cell
     }
@@ -150,7 +177,7 @@ extension UserManagementViewController: UICollectionViewDelegate, UICollectionVi
         //update
         SwiftEventBus.post("AddToMyList")
         SwiftEventBus.postToMainThread("ReloadHomeView")
-        self.navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: true)
     }
 }
 

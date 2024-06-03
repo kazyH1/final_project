@@ -129,13 +129,11 @@ class HeaderView: UIView {
     
     public func configure(movie: Movie) {
         self.movie = movie
-        print("H: \(String(movie.id ?? 0))")
         if let posterPath = movie.poster_path {
             guard let url = URL(string: "https://image.tmdb.org/t/p/w500\(movie.poster_path ?? "")") else { return }
             headerImageView.sd_setImage(with: url, completed: nil)
         } else {
-            // Xử lý nếu không có poster path
-            // Ví dụ: hiển thị một hình ảnh mặc định hoặc ẩn hình ảnh
+            headerImageView.image = UIImage(named: "imagePlaceholder")
         }
     }
 }

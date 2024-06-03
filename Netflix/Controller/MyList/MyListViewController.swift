@@ -8,7 +8,7 @@
 import UIKit
 import SwiftEventBus
 
-class MyListViewController: UIViewController {
+class MyListViewController: BaseViewController {
     
     @IBOutlet weak var myListTableView: UITableView!
     
@@ -17,7 +17,7 @@ class MyListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureNavigation()
+        configureNavbar()
         navigationItem.title = "My List"
         navigationController?.navigationBar.tintColor = .white
         
@@ -37,20 +37,6 @@ class MyListViewController: UIViewController {
         myListTableView.delegate = self
         myListTableView.separatorColor = UIColor("#737373")
         myListTableView.register(UINib(nibName: "TitleTableViewCell", bundle: nil), forCellReuseIdentifier: "TitleTableViewCell")
-    }
-    
-    func configureNavigation() {
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationItem.largeTitleDisplayMode = .always
-        
-        let navBarAppearance = UINavigationBarAppearance()
-        navBarAppearance.configureWithOpaqueBackground()
-        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-        navBarAppearance.backgroundColor = .black
-        navBarAppearance.shadowColor = nil
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
     }
     
     private func fetchMovieInList() {

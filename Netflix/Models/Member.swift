@@ -11,35 +11,47 @@ struct Member: Codable {
     let name: String?
     let image: String?
     
-    static func saveMembers(members: [Member]){
-       let membersData = try! JSONEncoder().encode(members)
-       UserDefaults.standard.set(membersData, forKey: "members")
-   }
-   
-    static func getMembers() -> [Member]?{
-       let membersData = UserDefaults.standard.data(forKey: "members")
-       if(membersData == nil){
-           return []
-       } else {
-           let members = try! JSONDecoder().decode([Member].self, from: membersData!)
-           return members
-       }
-   }
-    
-    static func saveCurrentMembers(member: Member){
-       let memberData = try! JSONEncoder().encode(member)
-       UserDefaults.standard.set(memberData, forKey: "member")
-   }
-   
-    static func getCurrentMembers() -> Member?{
-       let memberData = UserDefaults.standard.data(forKey: "member")
-       if(memberData == nil){
-           return nil
-       } else {
-           let member = try! JSONDecoder().decode(Member.self, from: memberData!)
-           return member
-       }
-   }
-   
-}
+    static func saveMembers(members: [Member]) {
+        do {
+            let membersData = try JSONEncoder().encode(members)
+            UserDefaults.standard.set(membersData, forKey: "members")
+        } catch {
+            print("Failed to save members: \(error.localizedDescription)")
+        }
+    }
 
+    static func getMembers() -> [Member]? {
+        guard let membersData = UserDefaults.standard.data(forKey: "members") else {
+            return []
+        }
+        do {
+            let members = try JSONDecoder().decode([Member].self, from: membersData)
+            return members
+        } catch {
+            print("Failed to decode members: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    static func saveCurrentMembers(member: Member) {
+        do {
+            let memberData = try JSONEncoder().encode(member)
+            UserDefaults.standard.set(memberData, forKey: "member")
+        } catch {
+            print("Failed to save current member: \(error.localizedDescription)")
+        }
+    }
+
+    static func getCurrentMembers() -> Member? {
+        guard let memberData = UserDefaults.standard.data(forKey: "member") else {
+            return nil
+        }
+        do {
+            let member = try JSONDecoder().decode(Member.self, from: memberData)
+            return member
+        } catch {
+            print("Failed to decode current member: \(error.localizedDescription)")
+            return nil
+        }
+    }
+}

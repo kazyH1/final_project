@@ -27,7 +27,6 @@ final class NewAndHotViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "New & Hot"
-        
         configureNavbar()
         fetchMyList()
         registerTableView()

@@ -35,31 +35,31 @@ class HomeViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         SwiftEventBus.onMainThread(self, name: "ReloadHomeView") { _ in
-            self.getMovieForTableHeaderView()
+//            DispatchQueue.main.async {
+                self.getMovieForTableHeaderView()
+                self.configureNavbar()
+//            }
         }
-        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         if self.checkMovieExistMyList(movie: randomTrendingMovie) == false {
             self.headerView?.addMyListButton.setImage(UIImage(named: "addList" ), for: .normal)
         } else {
             self.headerView?.addMyListButton.setImage(UIImage(named: "addListSuccess" ), for: .normal)
         }
-//        SwiftEventBus.onMainThread(self, name: "ReloadHomeFeedTableView") { result in
-////
-       
-//            self.homeFeedTableView.reloadData()
-//        }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        SwiftEventBus.unregister(self)
     }
     
     // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.headerView?.addMyListButton.isHidden = false
-        
+
         setupTableView()
         configureNavbar()
         setupTableHeaderView()
@@ -73,11 +73,6 @@ class HomeViewController: BaseViewController {
                 self.headerView?.addMyListButton.setImage(UIImage(named: "addList"), for: .normal)
             }
         }
-    }
-    
-    
-    deinit {
-        SwiftEventBus.unregister(self)
     }
 }
 
@@ -119,8 +114,12 @@ extension HomeViewController {
         default:
             return
         }
-        viewModel?.getMovies(for: category) { result in
-            self.handleResult(result, for: cell)
+        DispatchQueue.global().async {
+            self.viewModel?.getMovies(for: category) { result in
+                DispatchQueue.main.async {
+                    self.handleResult(result, for: cell)
+                }
+            }
         }
     }
     
@@ -134,27 +133,26 @@ extension HomeViewController {
     }
     
     private func getMovieForTableHeaderView() {
-        self.showSpinner(onView: self.view)
         viewModel?.fetchTrendingMoviePosterPath { [weak self] result in
-            switch result {
-            case .success(let movies):
-                if let randomMovie = movies.first {
-                    self?.randomTrendingMovie = randomMovie
-                    self?.headerView?.configure(movie: randomMovie)
-                }
-                else {
-                    let alertController = UIAlertController(title: "Error", message: "Failed to loading movie", preferredStyle: .alert)
-                    let okAction = UIAlertAction(title: "Exit App", style: .default) { _ in
-                        exit(0)
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let movies):
+                    if let randomMovie = movies.first {
+                        self?.randomTrendingMovie = randomMovie
+                        self?.headerView?.configure(movie: randomMovie)
                     }
-
-                    alertController.addAction(okAction)
-                    self?.present(alertController, animated: true, completion: nil)
+                    else {
+                        let alertController = UIAlertController(title: "Error", message: "Failed to loading movie", preferredStyle: .alert)
+                        let okAction = UIAlertAction(title: "Exit App", style: .default) { _ in
+                            exit(0)
+                        }
+                        
+                        alertController.addAction(okAction)
+                        self?.present(alertController, animated: true, completion: nil)
+                    }
+                case .failure(let error):
+                    print("Failed to configure header view: \(error.localizedDescription)")
                 }
-                self?.removeSpinner()
-            case .failure(let error):
-                print("Failed to configure header view: \(error.localizedDescription)")
-                self?.removeSpinner()
             }
         }
     }
@@ -193,16 +191,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     internal func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let defaultOffset = view.safeAreaInsets.top
-        let offset = scrollView.contentOffset.y + defaultOffset
-        navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
-    }
 }
 
 extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate {
-
+    
     func didTapPlayButton(movie: Movie) {
         pushMovieDetails(movie: movie)
     }
@@ -217,7 +209,7 @@ extension HomeViewController: HomeTableViewCellDelegate, HomeHeaderViewDelegate 
             action = "OK"
             return
         }
-
+        
         if(!checkMovieExistMyList(movie: randomTrendingMovie)){
             moviesMyList!.append(randomTrendingMovie!)
             Movie.saveMyListMovie(movies: moviesMyList ?? [])
