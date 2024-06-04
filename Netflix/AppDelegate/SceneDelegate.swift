@@ -32,6 +32,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //        window?.windowScene = windowScene
         //        window?.rootViewController = tabBarNavi
         window?.makeKeyAndVisible()
+        if let urlContext = connectionOptions.urlContexts.first, let currentUser1 = Auth.auth().currentUser {
+            handleDeepLink(url: urlContext.url)
+        } else if let urlContext = connectionOptions.urlContexts.first {
+            let alert = UIAlertController(title: "Please Sign In", message: "You need to be logged in to watch movies.", preferredStyle: .alert)
+                  alert.addAction(UIAlertAction(title: "Sign In", style: .default, handler: { [weak self] _ in
+                    guard let self = self else { return }
+                    let signInVC = SignInViewController()
+                    let signInNavi = UINavigationController(rootViewController: signInVC)
+                    self.window?.rootViewController = signInNavi
+                  }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            window?.rootViewController?.present(alert, animated: true)
+        }
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -62,6 +75,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
     
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url {
+            handleDeepLink(url: url)
+        }
+    }
     
+    private func handleDeepLink(url: URL) {
+        let urlString = url.absoluteString
+        let components = urlString.components(separatedBy: "=")
+        if components.count > 1, let movieIdString = components.last, let movieId = Int(movieIdString) {
+            // Create an instance of MovieDetailViewController and push it
+            if let navigationController = window?.rootViewController as? UINavigationController {
+                let movieDetailVC = MovieDetailViewController()
+                let movie = Movie(id: movieId, key: nil, media_type: nil, original_name: nil, original_title: nil, poster_path: nil, backdrop_path: nil, overview: nil, vote_count: 0, release_date: nil, vote_average: 0.0)
+                movieDetailVC.movie = movie
+                navigationController.pushViewController(movieDetailVC, animated: true)
+            }
+        }
+    }
 }
 

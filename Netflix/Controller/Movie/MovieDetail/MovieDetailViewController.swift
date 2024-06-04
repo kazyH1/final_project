@@ -16,7 +16,7 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
     @IBOutlet weak var playerView: YTPlayerView!
     @IBOutlet weak var detailView: UIView!
     @IBOutlet weak var overviewLabel: UILabel!
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var titleMovieLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
     
     
@@ -39,6 +39,21 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if self.checkMovieExistMyList(movie: self.movie!) == false {
+            self.addMyListButton.setImage(UIImage(systemName: "plus"), for: .normal)
+            self.addMyListButton.tintColor = .white
+            self.addMyListButton.setTitle("Add my list", for: .normal)
+            self.addMyListButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
+        } else {
+            self.addMyListButton.setImage(UIImage(systemName: "checkmark.rectangle.stack" ), for: .normal)
+            self.addMyListButton.tintColor = .white
+            self.addMyListButton.setTitle("Added", for: .normal)
+            self.addMyListButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel?.delegate = self
@@ -53,8 +68,6 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         
         playerView.delegate = self
         
-        //show button add to my list
-        self.addMyListButton.isHidden = false
         
         //show back button
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, view.safeAreaInsets.top))
@@ -82,12 +95,18 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         }
         
         moviesMyList = Movie.getMyListMovie() ?? []
-        self.addMyListButton.isHidden = checkMovieExistMyList(movie: self.movie!)
+//        self.addMyListButton.isHidden = checkMovieExistMyList(movie: self.movie!)
         SwiftEventBus.onMainThread(self, name: "DeleteItemMyList") {result in
             //my list
             self.moviesMyList = Movie.getMyListMovie() ?? []
             //show button add to my list
-            self.addMyListButton.isHidden = self.checkMovieExistMyList(movie: self.movie!)
+            if self.checkMovieExistMyList(movie: self.movie!) == false {
+                self.addMyListButton.setImage(UIImage(systemName: "plus"), for: .normal)
+                self.addMyListButton.tintColor = .white
+                self.addMyListButton.setTitle("Add my list", for: .normal)
+                self.addMyListButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
+            }
+
         }
     }
     
@@ -97,6 +116,15 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         navigationController?.pushViewController(infoVC, animated: true)
     }
     
+    @IBAction func shareButton(_ sender: UIButton) {
+        guard let movieId = movie?.id else { return }
+        let deepLink = "netflix://movie?id=\(movieId)"
+        let items = [deepLink]
+        let activityViewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        
+        present(activityViewController, animated: true, completion: nil)
+    }
     @IBAction func addToMyList(_ sender: Any) {
         var message = ""
         var title = ""
@@ -108,7 +136,10 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
             title = "Success"
             action = "OK"
             //event to update MyList screen
-            self.addMyListButton.isHidden = true
+            self.addMyListButton.setImage(UIImage(systemName: "checkmark.rectangle.stack" ), for: .normal)
+            self.addMyListButton.tintColor = .white
+            self.addMyListButton.setTitle("Added", for: .normal)
+            self.addMyListButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
             SwiftEventBus.post("AddToMyList")
         } else {
             message = "This movie was added to My List."
@@ -140,7 +171,7 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
         
         // basic setup
         view.backgroundColor = .black
-        
+        addMyListButton.layer.cornerRadius = 5
         // button customization
         backButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         backButton.setTitle("Back", for: .normal)
@@ -160,9 +191,6 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
     
     @objc private func handleBackButtonTapped() {
         self.navigationController?.popViewController(animated: true)
-        navigationItem.largeTitleDisplayMode = .always
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.sizeToFit()
     }
     
     func playVideo(with trailerKey: String) {
@@ -178,7 +206,7 @@ class MovieDetailViewController: UIViewController, YTPlayerViewDelegate {
 extension MovieDetailViewController: MovieDetailViewModelDelegate {
     func didFetchMovieDetails(details: MovieDetailResponse) {
         DispatchQueue.main.async { [weak self] in
-            self?.titleLabel.text = details.title
+            self?.titleMovieLabel.text = details.title
             self?.overviewLabel.text = details.overview
             self?.videos = details.videos.results
             if let trailerKey = details.videos.results.first?.key {
